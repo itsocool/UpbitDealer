@@ -61,6 +61,8 @@ namespace UpbitDealer.form
             access_key = text_sAPI_Key.Text;
             secret_key = text_sAPI_Secret.Text;
             ApiData apiData = new ApiData(access_key, secret_key);
+            Program.Accesskey = access_key;
+            Program.Secretkey = secret_key;
             int ret = apiData.checkApiKey();
             if (ret < 0)
             {

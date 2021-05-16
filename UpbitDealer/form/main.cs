@@ -34,7 +34,9 @@ namespace UpbitDealer.form
 
         private Thread thread_macro;
         public MacroSetting macro;
+        public BotSetting bot;
         public readonly object lock_macro = new object();
+        public readonly object lock_bot = new object();
 
 
         public Main(string sAPI_Key, string sAPI_Secret)
@@ -70,12 +72,15 @@ namespace UpbitDealer.form
 
                 for (int i = 0; i < account.Count; i++)
                 {
-                    DataRow dataRow = showAccount.NewRow();
-                    dataRow["Name"] = account[i].coinName;
-                    dataRow["Units"] = account[i].locked + account[i].valid;
-                    dataRow["Price"] = account[i].coinName == "KRW" ? 1 : ticker[account[i].coinName].close;
-                    dataRow["Total"] = (double)dataRow["Units"] * (double)dataRow["Price"];
-                    showAccount.Rows.Add(dataRow);
+                    if (!"USDT".Equals(account[i].coinName.ToUpper()))
+                    {
+                        DataRow dataRow = showAccount.NewRow();
+                        dataRow["Name"] = account[i].coinName;
+                        dataRow["Units"] = account[i].locked + account[i].valid;
+                        dataRow["Price"] = account[i].coinName == "KRW" ? 1 : ticker[account[i].coinName].close;
+                        dataRow["Total"] = (double)dataRow["Units"] * (double)dataRow["Price"];
+                        showAccount.Rows.Add(dataRow);
+                    }
                 }
 
                 dataGridView_holdList.DataSource = showAccount;
@@ -96,6 +101,15 @@ namespace UpbitDealer.form
             {
                 macro = new MacroSetting(sAPI_Key, sAPI_Secret, coinList);
                 if (macro.loadFile() < 0)
+                {
+                    Close();
+                    return;
+                }
+            }
+
+            {
+                bot = new BotSetting(sAPI_Key, sAPI_Secret, coinList);
+                if (bot.loadFile() < 0)
                 {
                     Close();
                     return;
@@ -474,6 +488,19 @@ namespace UpbitDealer.form
                 MessageBox.Show(ex.Message);
             }
             timer_log.Start();
+        }
+
+        private void btn_bot_click(object sender, EventArgs e)
+        {
+            foreach (Form fm in Application.OpenForms)
+                if (fm.Name == "Bot")
+                {
+                    MessageBox.Show("Fail to show 'Bot' window, already opened.");
+                    return;
+                }
+
+            Bot botForm = new Bot();
+            botForm.Show(this);
         }
     }
 }

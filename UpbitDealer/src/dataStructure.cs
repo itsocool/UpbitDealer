@@ -86,6 +86,30 @@ namespace UpbitDealer.src
         public bool min30_tl;
     }
 
+    public struct BotSettingData
+    {
+        public bool pauseBuy;
+
+        public int top;
+        public double yield;
+        public double krw;
+        public double time;
+        public double limit;
+        public double lostCut;
+
+        public bool week_bb;
+        public bool day_bb;
+        public bool hour4_bb;
+        public bool hour1_bb;
+        public bool min30_bb;
+
+        public bool week_tl;
+        public bool day_tl;
+        public bool hour4_tl;
+        public bool hour1_tl;
+        public bool min30_tl;
+    }
+
     public class NameValue
     {
         public string coinName;

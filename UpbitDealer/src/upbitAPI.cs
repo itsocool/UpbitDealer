@@ -12,6 +12,7 @@ using JWT;
 using JWT.Serializers;
 using System.Windows.Forms;
 using System.IdentityModel.Tokens.Jwt;
+using Newtonsoft.Json;
 
 namespace UpbitDealer.src
 {
@@ -32,7 +33,7 @@ namespace UpbitDealer.src
         public static string CANDLE_MONTH = "months";
     }
 
-    class ApiData
+    public class ApiData
     {
         private string access_key;
         private string secret_key;
@@ -203,8 +204,9 @@ namespace UpbitDealer.src
                 StreamReader reader = new StreamReader(dataStream);
                 return JObject.Parse(reader.ReadToEnd());
             }
-            catch
+            catch(Exception ex)
             {
+                _ = ex;
                 return null;
             }
         }
@@ -465,6 +467,29 @@ namespace UpbitDealer.src
                 return null;
             }
         }
+
+        public T getCandle<T>(string coinName, string candleType, int num = 0)
+        {
+            string url = ac.BASE_URL + "candles/" + candleType;
+            string dataParams = "market=KRW-" + coinName;
+            if (num > 0) dataParams += "&count=" + num;
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url + "?" + dataParams);
+            request.Method = "GET";
+
+            try
+            {
+                WebResponse response = request.GetResponse();
+                Stream dataStream = response.GetResponseStream();
+                StreamReader reader = new StreamReader(dataStream);
+                return JsonConvert.DeserializeObject<T>(reader.ReadToEnd());
+            }
+            catch
+            {
+                return default(T);
+            }
+        }
+
 
         public JArray getTrans(string coinName, int num = 0)
         {

@@ -64,11 +64,14 @@ namespace UpbitDealer.src
             account.Clear();
             for (int i = 0; i < jArray.Count; i++)
             {
-                account.Add(new Account(
-                    jArray[i]["currency"].ToString(),
-                    (double)jArray[i]["locked"],
-                    (double)jArray[i]["balance"])
-                    );
+                if (!"USDT".Equals(jArray[i]["currency"].ToString().ToUpper()))
+                {
+                    account.Add(new Account(
+                        jArray[i]["currency"].ToString(),
+                        (double)jArray[i]["locked"],
+                        (double)jArray[i]["balance"])
+                        );
+                }
             }
 
             return 0;

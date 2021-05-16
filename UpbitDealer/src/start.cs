@@ -1,11 +1,15 @@
 ﻿using UpbitDealer.form;
 using System;
 using System.Windows.Forms;
+using UpbitDealer.src;
 
 namespace UpbitDealer
 {
     static class Program
     {
+        public static string Accesskey { get; internal set; }
+        public static string Secretkey { get; internal set; }
+
         [STAThread]
         static void Main()
         {

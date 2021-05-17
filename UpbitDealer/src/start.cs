@@ -27,8 +27,13 @@ namespace UpbitDealer
 
             login login = new login();
             Application.Run(login);
-            if(login.isGood)
-                Application.Run(new Main(login.access_key, login.secret_key));
+            if (login.isGood)
+            {
+                Accesskey = login.access_key;
+                Secretkey = login.secret_key;
+                Application.Run(new Bot());
+            }
+                //Application.Run(new Main(login.access_key, login.secret_key));
         }
     }
 }

@@ -9,74 +9,70 @@ using UpbitDealer.Properties;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using System.Diagnostics;
-using System.Threading;
+using System.Activities.Statements;
 
 namespace UpbitDealer.form
 {
     public partial class Bot : Form
     {
-        public uint Algorithm { get; set; }
-        public string[] Coins { get; set; }
-        public decimal MaxProfit { get; set; }
-        public decimal Ratio { get; set; }
+        public int Algorithm { get; set; } = 0;
+        public List<Coin> Coins { get; set; } = BotSetting.Coins;
+        public List<Algorithm> AlgorithmList { get; set; } = BotSetting.AlgorithmList;
+        public double MaxProfit { get; set; }
+        public double Ratio { get; set; }
         public React React { get; set; }
         public ApiData ApiData { get; set; }
-        public System.Windows.Forms.Timer Timer { get; set; }
+        public Timer Timer { get; set; }
         public string CoinName { get; set; }
         public int Interval { get; set; } = 1;
         public int CandleCount { get; set; } = 10;
         public double TriggerRatio { get; set; }
-        public string CandleType { get; set; } = ac.CANDLE_MIN1;
-        //public List<Candle> Candles { get; set; }
-        //public JToken KRWAccount { get; set; }
-        //public JToken CoinAccount { get; set; }
-
-
-        public Dictionary<int, string> AlgorithmList { get; set; } = new Dictionary<int, string>()
-        {
-            {5, "5분봉 3틱" },
-            {10, "10분봉 3틱"},
-            {15, "15분봉 3틱" },
-        };
+        public string CandleType { get; set; } = ac.CANDLE_MIN3;
 
         public Bot()
         {
-            //Algorithm = Settings.Default.algorithm;
-            //Coins = Settings.Default.coins?.Split(',');
-            //MaxProfit = Settings.Default.maxProfit;
-            //Ratio = Settings.Default.ratio;
-            
             InitializeComponent();
 
-            //cmbAlgorithm.DataSource = new BindingSource(AlgorithmList, null);
-            //cmbAlgorithm.ValueMember = "Key";
-            //cmbAlgorithm.DisplayMember = "Value";
+            cmbAlgorithm.DataSource = new BindingSource(BotSetting.AlgorithmList, null);
+            cmbAlgorithm.ValueMember = "Key";
+            cmbAlgorithm.DisplayMember = "Value";
+            cmbAlgorithm.SelectedIndex = Settings.Default.algorithm;
+
+            cmbCoin.DataSource = new BindingSource(BotSetting.Coins, null);
+            cmbCoin.ValueMember = "Ticker";
+            cmbCoin.DisplayMember = "CoinName";
+            cmbCoin.SelectedValue = Settings.Default.coinName;
         }
 
         private void Bot_Load(object sender, EventArgs e)
         {
-            //var keys = AlgorithmList.Keys.ToList();
-            //var item = keys.Where(key => key == Algorithm).First();
-            //cmbAlgorithm.SelectedIndex = keys.IndexOf(item);
             var accessKey = Program.Accesskey;
             var secretEky = Program.Secretkey;
+            Algorithm = cmbAlgorithm.SelectedIndex;
             ApiData = new ApiData(accessKey, secretEky);
             React = new React(accessKey, secretEky);
-            //setDefaultSetting();
         }
 
-        private void SaveSettings()
+        private void WriteLog(string format, params object[] args)
         {
-            Settings.Default.algorithm = Algorithm;
-            Settings.Default.coins = string.Join(",", Coins);
-            Settings.Default.maxProfit = MaxProfit;
-            Settings.Default.ratio = Ratio;
-            Settings.Default.Save();
-        }
+            var log = string.Format(format, args);
 
-        private void GetData()
-        {
-            
+            if (InvokeRequired)
+            {
+                BeginInvoke((MethodInvoker) delegate
+                {
+                    txtLog.AppendText(log + Environment.NewLine);
+                });
+            }
+            else
+            {
+                txtLog.AppendText(log + Environment.NewLine);
+            }
+
+            if (chkAutoScroll.Checked)
+            {
+                txtLog.ScrollToCaret();
+            }
         }
 
         private void btnStart_Click(object sender, EventArgs e)
@@ -84,7 +80,7 @@ namespace UpbitDealer.form
             btnStart.Enabled = false;
             btnFinish.Enabled = true;
 
-            var coinName = txtCoinName.Text;
+            var coinName = cmbCoin.SelectedText;
             var intervalString = txtInterval.Text;
             var interval = 0;
             var triggerRatioString = txtRatio.Text;
@@ -101,28 +97,33 @@ namespace UpbitDealer.form
             CoinName = coinName;
             Interval = interval;
             TriggerRatio = triggerRatio;
+            CandleType = BotSetting.CandleTypes[cmbAlgorithm.SelectedIndex];
 
-            GetData();
-            Timer = new System.Windows.Forms.Timer();
+            Timer = new Timer();
             Timer.Interval = Interval * 1000;
             Timer.Tick += Timer_Tick;
             Timer.Start();
+
+            Debug.WriteLine("#### START TIMER");
+            WriteLog("#### START TIMER");
         }
 
-        private void Timer_Tick(object sender, EventArgs e)
+        private void PointHalfStrategy()
         {
+            // 1분봉 3개를 기준으로 이전 시가 에서 현재 금액 등낙률을 가져온다.
+            // 등낙률 0.5% 이상이 되면 오르면 팔고/ 내리면 산다.
+            // 거래시 보유 현금, 보유 코인의 절반을 거래하되 거래 금액이 만원 미만인 경우 전체 금액으로 거래한다.
+
             var KRWAccount = ApiData.getAsset().Where(x => "KRW".Equals(x.Value<string>("currency"))).First();
-            Thread.Sleep(100);
             var krwBalance = KRWAccount.Value<double>("balance");                                           // 보유 현금
+            txtKRW.Text = krwBalance.ToString("N0");
             var candles = ApiData.getCandle<List<Candle>>(CoinName, CandleType, CandleCount);
-            Thread.Sleep(100);
-            var prevCandle = candles[1];
-            var currCandle = candles[0];
+            var prevCandle = candles[2];        // 시가 봉
+            var currCandle = candles[0];        // 현재가 봉
             var currPrice = currCandle.Close;
             var prevPrice = prevCandle.Close;
 
             var orderChance = ApiData.getOrdersChance(CoinName);
-            Thread.Sleep(100);
             var ask = orderChance["ask_account"];
             var coinVol = ask.Value<double>("balance");                                                     // 보유 코인 수량
             var avgPrice = (coinVol * currPrice < 5000) ? currPrice : ask.Value<double>("avg_buy_price");   // 매수 평단가
@@ -133,6 +134,7 @@ namespace UpbitDealer.form
             var result = null as JObject;                               // 거래 결과
 
             Debug.WriteLine("upRatio : {0}, downRatio {1}", upRatio, downRatio);
+            WriteLog("upRatio : {0}, downRatio {1}", upRatio, downRatio);
 
             try
             {
@@ -140,29 +142,96 @@ namespace UpbitDealer.form
                 {
                     // 올랐을때 코인 금액 절반 팔기
                     var vol = (coinPrice / 2) > 5000 ? coinVol / 2 : coinVol;
+                    vol = Math.Truncate(vol * 100000) / 100000;
                     Debug.WriteLine("#### {2} SELL : 금액 {0}, 수량 {1}", vol * currPrice, vol, CoinName);
-                    Thread.Sleep(100);
+                    WriteLog("#### {2} SELL : 금액 {0}, 수량 {1}", vol * currPrice, vol, CoinName);
                     result = React.executeDeal(false, false, CoinName, vol, 0, 0);
                 }
                 else if (downRatio <= -(TriggerRatio) && krwBalance > 5000)
                 {
                     // 내렸을때 보유 현금 절반으로 코인 사기
                     var total = (krwBalance / 2) > 5000 ? krwBalance / 2 : krwBalance;
+                    total = Math.Truncate(total * 1000) / 1000;
                     Debug.WriteLine("#### {2} BUY : 금액 {0}, 수량 {1}", total, total / currPrice, CoinName);
-                    Thread.Sleep(100);
-                    result = React.executeDeal(true, false, CoinName, 0, 0, Math.Truncate(total / 10) * 10);
+                    WriteLog("#### {2} BUY : 금액 {0}, 수량 {1}", total, total / currPrice, CoinName);
+                    result = React.executeDeal(true, false, CoinName, 0, 0, total);
                 }
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex);
+                WriteLog(ex.StackTrace);
             }
-            
-            if(result != null)
+
+            if (result != null)
             {
                 Debug.WriteLine("#### RESULT : {0}", result.ToString());
+                WriteLog("#### RESULT : {0}", result.ToString());
             }
-            
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            if(cmbAlgorithm.SelectedIndex == 0)
+            {
+                PointHalfStrategy();
+            }
+            else if (cmbAlgorithm.SelectedIndex == 1)
+            {
+                var KRWAccount = ApiData.getAsset().Where(x => "KRW".Equals(x.Value<string>("currency"))).First();
+                var krwBalance = KRWAccount.Value<double>("balance");                                           // 보유 현금
+                var candles = ApiData.getCandle<List<Candle>>(CoinName, CandleType, CandleCount);
+                var prevCandle = candles[2];
+                var currCandle = candles[0];
+                var currPrice = currCandle.Close;
+                var prevPrice = prevCandle.Close;
+
+                var orderChance = ApiData.getOrdersChance(CoinName);
+                var ask = orderChance["ask_account"];
+                var coinVol = ask.Value<double>("balance");                                                     // 보유 코인 수량
+                var avgPrice = (coinVol * currPrice < 5000) ? currPrice : ask.Value<double>("avg_buy_price");   // 매수 평단가
+
+                var coinPrice = avgPrice * coinVol;                         // 보유 코인 금액
+                var upRatio = (currPrice - avgPrice) / currPrice * 100;     // 평단 대비 상승폭 (%)
+                var downRatio = (currPrice - prevPrice) / currPrice * 100;  // 현재가 대비 하락폭 (%)
+                var result = null as JObject;                               // 거래 결과
+
+                Debug.WriteLine("upRatio : {0}, downRatio {1}", upRatio, downRatio);
+                WriteLog("upRatio : {0}, downRatio {1}", upRatio, downRatio);
+
+                try
+                {
+                    if (upRatio >= TriggerRatio && coinPrice > 5000)
+                    {
+                        // 올랐을때 코인 금액 절반 팔기
+                        var vol = (coinPrice / 2) > 5000 ? coinVol / 2 : coinVol;
+                        vol = Math.Truncate(vol * 100000) / 100000;
+                        Debug.WriteLine("#### {2} SELL : 금액 {0}, 수량 {1}", vol * currPrice, vol, CoinName);
+                        WriteLog("#### {2} SELL : 금액 {0}, 수량 {1}", vol * currPrice, vol, CoinName);
+                        result = React.executeDeal(false, false, CoinName, vol, 0, 0);
+                    }
+                    else if (downRatio <= -(TriggerRatio) && krwBalance > 5000)
+                    {
+                        // 내렸을때 보유 현금 절반으로 코인 사기
+                        var total = (krwBalance / 2) > 5000 ? krwBalance / 2 : krwBalance;
+                        total = Math.Truncate(total * 1000) / 1000;
+                        Debug.WriteLine("#### {2} BUY : 금액 {0}, 수량 {1}", total, total / currPrice, CoinName);
+                        WriteLog("#### {2} BUY : 금액 {0}, 수량 {1}", total, total / currPrice, CoinName);
+                        result = React.executeDeal(true, false, CoinName, 0, 0, total);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
+                    WriteLog(ex.StackTrace);
+                }
+
+                if (result != null)
+                {
+                    Debug.WriteLine("#### RESULT : {0}", result.ToString());
+                    WriteLog("#### RESULT : {0}", result.ToString());
+                }
+            }
         }
 
         private void btnFinish_Click(object sender, EventArgs e)
@@ -172,6 +241,9 @@ namespace UpbitDealer.form
                 Timer.Stop();
                 btnStart.Enabled = true;
                 btnFinish.Enabled = false;
+
+                Debug.WriteLine("#### STOP TIMER");
+                WriteLog("#### STOP TIMER");
             }
         }
 
@@ -179,8 +251,9 @@ namespace UpbitDealer.form
         {
             try
             {
-                var coinName = txtCoinName.Text;
-                var result = React.executeDeal(true, false, coinName, 3, 0, 5000);
+                var coinName = cmbCoin.Text;
+                var total = Convert.ToDouble(txtProfit.Text);
+                var result = React.executeDeal(true, false, coinName, 3, 0, total);
                 Debug.WriteLine("#### RESULT : {0}", result.ToString());
             }
             catch (Exception ex)
@@ -191,149 +264,7 @@ namespace UpbitDealer.form
 
         private void button2_Click(object sender, EventArgs e)
         {
-            try
-            {
-                var coinName = txtCoinName.Text;
-                var result = React.executeDeal(false, false, coinName, 3, 0, 0);
-                Debug.WriteLine("#### RESULT : {0}", result.ToString());
-            }
-            catch (Exception ex)
-            {
-                _ = ex;
-            }
+            txtLog.Text = "";
         }
-
-        /*
-        private void setDefaultSetting()
-        {
-            lock (((Main)Owner).lock_bot)
-                setting = ((Main)Owner).bot.setting;
-
-            btn_pause.BackColor = setting.pauseBuy ? Color.Red : Color.DarkGray;
-
-            text_top.Text = setting.top.ToString();
-            text_yield.Text = setting.yield.ToString();
-            text_krw.Text = setting.krw.ToString();
-            text_time.Text = setting.time.ToString();
-            text_limit.Text = setting.limit.ToString();
-            text_lostCut.Text = setting.lostCut.ToString();
-
-            check_week_bb.Checked = setting.week_bb;
-            check_day_bb.Checked = setting.day_bb;
-            check_hour4_bb.Checked = setting.hour4_bb;
-            check_hour1_bb.Checked = setting.hour1_bb;
-            check_min30_bb.Checked = setting.min30_bb;
-
-            check_week_tl.Checked = setting.week_tl;
-            check_day_tl.Checked = setting.day_tl;
-            check_hour4_tl.Checked = setting.hour4_tl;
-            check_hour1_tl.Checked = setting.hour1_tl;
-            check_min30_tl.Checked = setting.min30_tl;
-        }
-
-
-        private void btn_save_Click(object sender, EventArgs e)
-        {
-            if (text_yield.Text == "" || text_krw.Text == "" || text_time.Text == "")
-            {
-                MessageBox.Show("Check Parameters.");
-                return;
-            }
-
-            BotSettingData setting = new BotSettingData();
-
-            setting.pauseBuy = this.setting.pauseBuy;
-
-            if (!int.TryParse(text_top.Text, out setting.top))
-            {
-                if (text_top.Text == "") setting.top = 70;
-                else
-                {
-                    MessageBox.Show("Top value is not number.");
-                    return;
-                }
-            }
-            if (!double.TryParse(text_yield.Text, out setting.yield))
-            {
-                MessageBox.Show("Yield value is not number.");
-                return;
-            }
-            if (!double.TryParse(text_krw.Text, out setting.krw))
-            {
-                MessageBox.Show("KRW value is not number.");
-                return;
-            }
-            if (!double.TryParse(text_time.Text, out setting.time))
-            {
-                MessageBox.Show("Time value is not number.");
-                return;
-            }
-            if (!double.TryParse(text_limit.Text, out setting.limit))
-            {
-                if (text_limit.Text == "") setting.limit = 0;
-                else
-                {
-                    MessageBox.Show("Limit value is not number.");
-                    return;
-                }
-            }
-            if (!double.TryParse(text_lostCut.Text, out setting.lostCut))
-            {
-                if (text_lostCut.Text == "") setting.lostCut = 0;
-                else
-                {
-                    MessageBox.Show("Lost Cut value is not number.");
-                    return;
-                }
-            }
-
-            setting.week_bb = check_week_bb.Checked;
-            setting.day_bb = check_day_bb.Checked;
-            setting.hour4_bb = check_hour4_bb.Checked;
-            setting.hour1_bb = check_hour1_bb.Checked;
-            setting.min30_bb = check_min30_bb.Checked;
-
-            setting.week_tl = check_week_tl.Checked;
-            setting.day_tl = check_day_tl.Checked;
-            setting.hour4_tl = check_hour4_tl.Checked;
-            setting.hour1_tl = check_hour1_tl.Checked;
-            setting.min30_tl = check_min30_tl.Checked;
-
-            if (setting.top < 0 || setting.yield < 0 || setting.krw < 0 ||
-                setting.time < 0 || setting.limit < 0 || setting.lostCut < 0)
-            {
-                MessageBox.Show("Required setting values can't be negative.");
-                return;
-            }
-            if (!(setting.week_bb || setting.day_bb || setting.hour4_bb || setting.hour1_bb || setting.min30_bb ||
-                setting.week_tl || setting.day_tl || setting.hour4_tl || setting.hour1_tl || setting.min30_tl))
-            {
-                MessageBox.Show("At least one of optional setting values must be checked.");
-                return;
-            }
-
-            lock (((Main)Owner).lock_bot)
-                ((Main)Owner).bot.saveBotSetting(setting);
-
-            setDefaultSetting();
-            MessageBox.Show("Save success.");
-        }
-        private void btn_cancel_Click(object sender, EventArgs e)
-        {
-            setDefaultSetting();
-        }
-        private void btn_pause_Click(object sender, EventArgs e)
-        {
-            setting.pauseBuy = setting.pauseBuy ? false : true;
-            lock (((Main)Owner).lock_bot)
-                ((Main)Owner).bot.saveBotSetting(setting);
-            setDefaultSetting();
-
-            if (setting.pauseBuy)
-                MessageBox.Show("Pause Bot.");
-            else
-                MessageBox.Show("Continue Bot.");
-        }
-        */
     }
 }

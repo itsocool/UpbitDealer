@@ -7,6 +7,38 @@ namespace UpbitDealer.src
 {
     public class BotSetting
     {
+        public static List<Coin> Coins { get; set; } = new List<Coin>()
+        {
+            new Coin{ Ticker = "BTC", CoinName = "BTC 비트코인" },
+            new Coin{ Ticker = "ETH", CoinName = "ETH 이더리움" },
+            new Coin{ Ticker = "DOGE", CoinName = "DOGE 도지코인" },
+            new Coin{ Ticker = "ETC", CoinName = "ETC 이더리움 클래식" },
+            new Coin{ Ticker = "XRP", CoinName = "리플 XRP" },
+            new Coin{ Ticker = "ADA", CoinName = "ADA 에이다" },
+            new Coin{ Ticker = "EOS", CoinName = "EOS 이오스" },
+        };
+
+
+        public static List<Algorithm> AlgorithmList { get; set; } = new List<Algorithm>()
+        {
+            new Algorithm{ Key = 0, Value = "쩜오 전략" },
+            new Algorithm{ Key = 1, Value = "1분봉 3틱" },
+            new Algorithm{ Key = 2, Value = "3분봉 3틱" },
+            new Algorithm{ Key = 3, Value = "5분봉 3틱" },
+            new Algorithm{ Key = 4, Value = "10분봉 3틱" },
+            new Algorithm{ Key = 5, Value = "15분봉 3틱" },
+        };
+
+        public static List<string> CandleTypes { get; set; } = new List<string>()
+        {
+            null,
+            ac.CANDLE_MIN1,
+            ac.CANDLE_MIN3,
+            ac.CANDLE_MIN5,
+            ac.CANDLE_MIN10,
+            ac.CANDLE_MIN15,
+        };
+
         private ApiData apiData;
 
         private List<string> coinList = new List<string>();
@@ -108,20 +140,20 @@ namespace UpbitDealer.src
                         if (singleData.Length < 2) continue;
 
                         else if (singleData[0] == "pause_buy") setting.pauseBuy = bool.Parse(singleData[1]);
-                                 
+
                         else if (singleData[0] == "top") setting.top = int.Parse(singleData[1]);
                         else if (singleData[0] == "yield") setting.yield = double.Parse(singleData[1]);
                         else if (singleData[0] == "krw") setting.krw = double.Parse(singleData[1]);
                         else if (singleData[0] == "time") setting.time = double.Parse(singleData[1]);
                         else if (singleData[0] == "limit") setting.limit = double.Parse(singleData[1]);
                         else if (singleData[0] == "lost_cut") setting.lostCut = double.Parse(singleData[1]);
-                                 
+
                         else if (singleData[0] == "week_bollinger") setting.week_bb = bool.Parse(singleData[1]);
                         else if (singleData[0] == "day_bollinger") setting.day_bb = bool.Parse(singleData[1]);
                         else if (singleData[0] == "hour4_bollinger") setting.hour4_bb = bool.Parse(singleData[1]);
                         else if (singleData[0] == "hour1_bollinger") setting.hour1_bb = bool.Parse(singleData[1]);
                         else if (singleData[0] == "min30_bollinger") setting.min30_bb = bool.Parse(singleData[1]);
-                                 
+
                         else if (singleData[0] == "week_trend_line") setting.week_tl = bool.Parse(singleData[1]);
                         else if (singleData[0] == "day_trend_line") setting.day_tl = bool.Parse(singleData[1]);
                         else if (singleData[0] == "hour4_trend_line") setting.hour4_tl = bool.Parse(singleData[1]);

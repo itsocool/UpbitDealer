@@ -25,10 +25,10 @@ namespace UpbitDealer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("5")]
-        public uint algorithm {
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int algorithm {
             get {
-                return ((uint)(this["algorithm"]));
+                return ((int)(this["algorithm"]));
             }
             set {
                 this["algorithm"] = value;
@@ -37,7 +37,7 @@ namespace UpbitDealer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("BTC,ETH,ETC,DOGE,RRP,EOS\r\n")]
+        [global::System.Configuration.DefaultSettingValueAttribute("BTC,ETH,ETC,DOGE,XRP,EOS\r\n")]
         public string coins {
             get {
                 return ((string)(this["coins"]));
@@ -50,9 +50,9 @@ namespace UpbitDealer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public decimal maxProfit {
+        public double maxProfit {
             get {
-                return ((decimal)(this["maxProfit"]));
+                return ((double)(this["maxProfit"]));
             }
             set {
                 this["maxProfit"] = value;
@@ -62,9 +62,9 @@ namespace UpbitDealer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0.05")]
-        public decimal fee {
+        public double fee {
             get {
-                return ((decimal)(this["fee"]));
+                return ((double)(this["fee"]));
             }
             set {
                 this["fee"] = value;
@@ -73,13 +73,25 @@ namespace UpbitDealer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("50.00")]
-        public decimal ratio {
+        [global::System.Configuration.DefaultSettingValueAttribute("50")]
+        public double ratio {
             get {
-                return ((decimal)(this["ratio"]));
+                return ((double)(this["ratio"]));
             }
             set {
                 this["ratio"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("XRP")]
+        public string coinName {
+            get {
+                return ((string)(this["coinName"]));
+            }
+            set {
+                this["coinName"] = value;
             }
         }
     }

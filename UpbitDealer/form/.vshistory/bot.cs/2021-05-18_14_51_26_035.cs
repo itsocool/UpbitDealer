@@ -24,6 +24,7 @@ namespace UpbitDealer.form
         public int TradeRate { get; set; }
         public Coin Coin { get; set; }
         public int Interval { get; set; }
+        public double Rate { get; set; }
         public int CandleCount { get; set; }
         public double TriggerRate { get; set; }
         public DateTime LastBuyDate { get; set; } = DateTime.MinValue;
@@ -72,8 +73,9 @@ namespace UpbitDealer.form
             TradeRate = Settings.Default.tradeRate;
             Coin = BotSetting.CoinList.Where(x => x.Ticker.Equals(Settings.Default.coin)).FirstOrDefault();
             Interval = Convert.ToInt32(Settings.Default.interval);
-            TriggerRate = Settings.Default.triggerRate;
+            Rate = Convert.ToDouble(Settings.Default.rate);
             CandleCount = Convert.ToInt32(Settings.Default.candleCount);
+            TriggerRate = Settings.Default.triggerRate;
 
             if (bindControl)
             {
@@ -83,8 +85,9 @@ namespace UpbitDealer.form
                 txtTradeRate.Text = TradeRate.ToString();
                 cmbCoin.SelectedItem = Coin;
                 txtInterval.Text = Interval.ToString();
-                txtTriggerRate.Text = TriggerRate.ToString();
+                txtTriggerRate.Text = Rate.ToString();
                 txtCandleCount.Text = CandleCount.ToString();
+                txtTriggerRate.Text = TriggerRate.ToString();
             }
         }
 
@@ -96,8 +99,9 @@ namespace UpbitDealer.form
             TradeRate = Convert.ToInt32(txtTradeRate.Text);
             Coin = cmbCoin.SelectedItem as Coin;
             Interval = Convert.ToInt32(txtInterval.Text);
-            TriggerRate = Convert.ToDouble(txtTriggerRate.Text);
+            Rate = Convert.ToDouble(txtTriggerRate.Text);
             CandleCount = Convert.ToInt32(txtCandleCount.Text);
+            TriggerRate = Convert.ToDouble(txtSellRate.Text);
 
             if (save)
             {
@@ -107,8 +111,9 @@ namespace UpbitDealer.form
                 Settings.Default.tradeRate = TradeRate;
                 Settings.Default.coin = Coin.Ticker;
                 Settings.Default.interval = Interval;
-                Settings.Default.triggerRate = TriggerRate;
+                Settings.Default.rate = Rate;
                 Settings.Default.candleCount = CandleCount;
+                Settings.Default.triggerRate = TriggerRate;
 
                 Settings.Default.Save();
             }
@@ -118,7 +123,7 @@ namespace UpbitDealer.form
         {
             ReadInput();
 
-            if (string.IsNullOrEmpty(Coin.Ticker) || Interval <= 0 || TriggerRate <= 0 || TradeRate <= 0 || CandleCount <= 0)
+            if (string.IsNullOrEmpty(Coin.Ticker) || Interval <= 0 || Rate <= 0 || TradeRate <= 0 || CandleCount <= 0)
             {
                 MessageBox.Show("거래 설정값을 모두 입력하세요");
                 return;
@@ -237,9 +242,10 @@ namespace UpbitDealer.form
             var coinName = Coin.Ticker;
             var candleType = CandleType.Name;
             var candleCount = CandleCount;
+            //var triggerRate = Rate;
             var feeRate = FeeRate;
-            var tradeRate = TradeRate;
-            var triggerRate = TriggerRate;
+            //var tradeRate = TradeRate;
+            var profitRate = TriggerRate;
 
             // 해당 코인 보유금액이 있으면 매도 없으면 매수
             var candles = ApiData.getCandle<List<Candle>>(coinName, candleType, candleCount);   // 캔들 조회
@@ -259,14 +265,14 @@ namespace UpbitDealer.form
             var startPrice = lastCandle.Open;                                               // 마지막 캔들 시작가
             var change = (currPrice - prevPrice);                                           // 변동가
             var currentRate = (change / currPrice) * 100;                                   // 등락율
-            var candlesChange = (currPrice - startPrice);                                   // 캔들 변동가
-            var candlesRate = (candlesChange / startPrice) * 100;                           // 캔들 등락율
+            var downChange = (startPrice - currPrice);                                      // 상승전 변동가
+            var downRate = (downChange / startPrice) * 100;                                 // 상승전 하락율
             var profit = (currPrice - avgPrice);                                            // 수익
             var tradeProfitRate = (profit / avgPrice) * 100;                                // 수익율
             var result = null as JObject;
-            var args = new object[] { coinName, currPrice, prevPrice, startPrice, currentRate, candlesRate };
+            var args = new object[] { coinName, currPrice, prevPrice, startPrice, currentRate, downRate };
 
-            WriteLog("{0} : 현재가 {1:N0}, 직전가 {2:N0}, 시작가 {3:N0}, 직전등락폭 {4:F6}, 등락폭 {5:F6}", args);
+            WriteLog("{0} : 현재가 {1:N0}, 직전가 {2:N0}, 시작가 {3:N0}, 직전등락폭 {4:F6}, 하락폭 {5:F6}", args);
 
             if(StartKRW < minTradeKRW && krwBalance > minTradeKRW && coinPrice < minTradeKRW)
             {
@@ -282,7 +288,7 @@ namespace UpbitDealer.form
                     WriteLog("#### 거래 불가 : 보유현금 {0}, 코인보유금 {1}, 최소 거래 금액 {2},", krwBalance, coinPrice, minTradeKRW);
                 }
                 else if (krwBalance > minTradeKRW
-                    && candlesRate <= -(triggerRate + (feeRate * 2))
+                    && downRate >= profitRate + (feeRate * 2)
                     && currentRate >= (feeRate * 2))
                 {
                     // BUY
@@ -294,7 +300,7 @@ namespace UpbitDealer.form
                     WriteLog("#### {0} BUY : 금액 {1:N0}, 수량 {2:F6}", coinName, total, total / currPrice);
                 }
                 else if (coinPrice > minTradeKRW
-                    && (tradeProfitRate <= -(triggerRate - (feeRate * 2)) || tradeProfitRate >= triggerRate + (feeRate * 2)))
+                    && (tradeProfitRate <= -(profitRate - (feeRate * 2)) || tradeProfitRate >= profitRate + (feeRate * 2)))
                 {
                     // SELL
                     // 코인평가금 최소 거래금액 보다 많음

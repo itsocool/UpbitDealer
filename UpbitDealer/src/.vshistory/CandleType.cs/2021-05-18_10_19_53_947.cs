@@ -9,7 +9,7 @@ namespace UpbitDealer.src
     public class CandleType
     {
 
-        public static Dictionary<int, string> CandleNames = new Dictionary<int, string>()
+        public static Dictionary<int, string> candleNames = new Dictionary<int, string>()
         {
             {1, ac.CANDLE_MIN1 },
             {3, ac.CANDLE_MIN3 },
@@ -25,10 +25,10 @@ namespace UpbitDealer.src
 
         public CandleType(int minute)
         {
-            if (CandleNames.Keys.Contains(minute))
+            if (candleNames.Keys.Contains(minute))
             {
                 Minute = minute;
-                Name = CandleNames[minute];
+                Name = candleNames[minute];
             }
             else
             {

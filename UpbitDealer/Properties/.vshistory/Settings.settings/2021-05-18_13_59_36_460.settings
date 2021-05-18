@@ -5,7 +5,7 @@
     <Setting Name="algorithm" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
-    <Setting Name="feeRate" Type="System.Double" Scope="User">
+    <Setting Name="fee" Type="System.Double" Scope="User">
       <Value Profile="(Default)">0.05</Value>
     </Setting>
     <Setting Name="coin" Type="System.String" Scope="User">
@@ -20,10 +20,13 @@
     <Setting Name="interval" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
+    <Setting Name="rate" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
     <Setting Name="candleCount" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">3</Value>
     </Setting>
-    <Setting Name="triggerRate" Type="System.Double" Scope="User">
+    <Setting Name="profit" Type="System.Double" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
     <Setting Name="minTradeKRW" Type="System.Double" Scope="User">

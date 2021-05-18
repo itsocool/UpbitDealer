@@ -59,6 +59,8 @@ namespace UpbitDealer.form
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.chkAutoScroll = new System.Windows.Forms.CheckBox();
             this.txtLog = new System.Windows.Forms.TextBox();
+            this.txtSellRate = new System.Windows.Forms.TextBox();
+            this.textBox2 = new System.Windows.Forms.TextBox();
             this.txtpp = new System.Windows.Forms.TextBox();
             this.textBox5 = new System.Windows.Forms.TextBox();
             this.textBox7 = new System.Windows.Forms.TextBox();
@@ -82,6 +84,8 @@ namespace UpbitDealer.form
             // 
             // groupBox6
             // 
+            this.groupBox6.Controls.Add(this.txtSellRate);
+            this.groupBox6.Controls.Add(this.textBox2);
             this.groupBox6.Controls.Add(this.cmbCandle);
             this.groupBox6.Controls.Add(this.txtCandleCount);
             this.groupBox6.Controls.Add(this.textBox4);
@@ -500,6 +504,35 @@ namespace UpbitDealer.form
             this.txtLog.Size = new System.Drawing.Size(915, 619);
             this.txtLog.TabIndex = 2;
             // 
+            // txtSellRate
+            // 
+            this.txtSellRate.BackColor = System.Drawing.Color.LightGray;
+            this.txtSellRate.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtSellRate.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtSellRate.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtSellRate.ForeColor = System.Drawing.Color.Black;
+            this.txtSellRate.Location = new System.Drawing.Point(140, 341);
+            this.txtSellRate.Name = "txtSellRate";
+            this.txtSellRate.Size = new System.Drawing.Size(256, 38);
+            this.txtSellRate.TabIndex = 57;
+            this.txtSellRate.Text = "1";
+            this.txtSellRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtSellRate.Visible = false;
+            // 
+            // textBox2
+            // 
+            this.textBox2.BackColor = System.Drawing.Color.Black;
+            this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.textBox2.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox2.ForeColor = System.Drawing.Color.White;
+            this.textBox2.Location = new System.Drawing.Point(6, 344);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.ReadOnly = true;
+            this.textBox2.Size = new System.Drawing.Size(128, 28);
+            this.textBox2.TabIndex = 56;
+            this.textBox2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // txtpp
             // 
             this.txtpp.BackColor = System.Drawing.Color.LightGray;
@@ -615,6 +648,8 @@ namespace UpbitDealer.form
         private System.Windows.Forms.TextBox txtCandleCount;
         private System.Windows.Forms.TextBox textBox4;
         private System.Windows.Forms.ComboBox cmbCandle;
+        private System.Windows.Forms.TextBox txtSellRate;
+        private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.TextBox txtpp;
         private System.Windows.Forms.TextBox textBox5;
         private System.Windows.Forms.TextBox textBox7;

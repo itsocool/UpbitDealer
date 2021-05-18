@@ -24,16 +24,7 @@ namespace UpbitDealer.src
             new Algorithm{ Id = 1, Name = "분봉 N틱" },
         };
 
-        public static List<CandleType> CandleTypes { get; set; } = new List<CandleType>()
-        {
-            new CandleType(1),
-            new CandleType(3),
-            new CandleType(5),
-            new CandleType(10),
-            new CandleType(15),
-            new CandleType(30),
-            new CandleType(60),
-        };
+        //public static Dictionary<int, string> CandleTypes { get; set; } = CandleType.candleNames;
 
         private ApiData apiData;
 

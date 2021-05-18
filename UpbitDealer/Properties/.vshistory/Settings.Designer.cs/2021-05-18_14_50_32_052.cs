@@ -38,12 +38,12 @@ namespace UpbitDealer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0.05")]
-        public double feeRate {
+        public double fee {
             get {
-                return ((double)(this["feeRate"]));
+                return ((double)(this["fee"]));
             }
             set {
-                this["feeRate"] = value;
+                this["fee"] = value;
             }
         }
         
@@ -97,6 +97,18 @@ namespace UpbitDealer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public double rate {
+            get {
+                return ((double)(this["rate"]));
+            }
+            set {
+                this["rate"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("3")]
         public int candleCount {
             get {
@@ -112,10 +124,10 @@ namespace UpbitDealer.Properties {
         [global::System.Configuration.DefaultSettingValueAttribute("1")]
         public double triggerRate {
             get {
-                return ((double)(this["triggerRate"]));
+                return ((double)(this["profit"]));
             }
             set {
-                this["triggerRate"] = value;
+                this["profit"] = value;
             }
         }
         

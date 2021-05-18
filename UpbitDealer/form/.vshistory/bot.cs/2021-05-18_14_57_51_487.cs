@@ -259,14 +259,14 @@ namespace UpbitDealer.form
             var startPrice = lastCandle.Open;                                               // 마지막 캔들 시작가
             var change = (currPrice - prevPrice);                                           // 변동가
             var currentRate = (change / currPrice) * 100;                                   // 등락율
-            var candlesChange = (currPrice - startPrice);                                   // 캔들 변동가
-            var candlesRate = (candlesChange / startPrice) * 100;                           // 캔들 등락율
+            var candlesChange = (startPrice - currPrice);                                      // 상승전 변동가
+            var downRate = (candlesChange / startPrice) * 100;                                 // 상승전 하락율
             var profit = (currPrice - avgPrice);                                            // 수익
             var tradeProfitRate = (profit / avgPrice) * 100;                                // 수익율
             var result = null as JObject;
-            var args = new object[] { coinName, currPrice, prevPrice, startPrice, currentRate, candlesRate };
+            var args = new object[] { coinName, currPrice, prevPrice, startPrice, currentRate, downRate };
 
-            WriteLog("{0} : 현재가 {1:N0}, 직전가 {2:N0}, 시작가 {3:N0}, 직전등락폭 {4:F6}, 등락폭 {5:F6}", args);
+            WriteLog("{0} : 현재가 {1:N0}, 직전가 {2:N0}, 시작가 {3:N0}, 직전등락폭 {4:F6}, 하락폭 {5:F6}", args);
 
             if(StartKRW < minTradeKRW && krwBalance > minTradeKRW && coinPrice < minTradeKRW)
             {
@@ -282,7 +282,7 @@ namespace UpbitDealer.form
                     WriteLog("#### 거래 불가 : 보유현금 {0}, 코인보유금 {1}, 최소 거래 금액 {2},", krwBalance, coinPrice, minTradeKRW);
                 }
                 else if (krwBalance > minTradeKRW
-                    && candlesRate <= -(triggerRate + (feeRate * 2))
+                    && downRate >= triggerRate + (feeRate * 2)
                     && currentRate >= (feeRate * 2))
                 {
                     // BUY

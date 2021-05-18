@@ -7,7 +7,7 @@ namespace UpbitDealer.src
 {
     public class BotSetting
     {
-        public static List<Coin> Coins { get; set; } = new List<Coin>()
+        public static List<Coin> CoinList { get; set; } = new List<Coin>()
         {
             new Coin{ Ticker = "BTC", CoinName = "BTC 비트코인" },
             new Coin{ Ticker = "ETH", CoinName = "ETH 이더리움" },
@@ -18,26 +18,13 @@ namespace UpbitDealer.src
             new Coin{ Ticker = "EOS", CoinName = "EOS 이오스" },
         };
 
-
         public static List<Algorithm> AlgorithmList { get; set; } = new List<Algorithm>()
         {
-            new Algorithm{ Key = 0, Value = "쩜오 전략" },
-            new Algorithm{ Key = 1, Value = "1분봉 3틱" },
-            new Algorithm{ Key = 2, Value = "3분봉 3틱" },
-            new Algorithm{ Key = 3, Value = "5분봉 3틱" },
-            new Algorithm{ Key = 4, Value = "10분봉 3틱" },
-            new Algorithm{ Key = 5, Value = "15분봉 3틱" },
+            new Algorithm{ Id = 0, Name = "쩜오 전략" },
+            new Algorithm{ Id = 1, Name = "분봉 N틱" },
         };
 
-        public static List<string> CandleTypes { get; set; } = new List<string>()
-        {
-            null,
-            ac.CANDLE_MIN1,
-            ac.CANDLE_MIN3,
-            ac.CANDLE_MIN5,
-            ac.CANDLE_MIN10,
-            ac.CANDLE_MIN15,
-        };
+        //public static Dictionary<int, string> CandleTypes { get; set; } = CandleType.candleNames;
 
         private ApiData apiData;
 

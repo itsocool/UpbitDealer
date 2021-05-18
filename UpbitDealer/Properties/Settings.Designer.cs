@@ -37,30 +37,6 @@ namespace UpbitDealer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("BTC,ETH,ETC,DOGE,XRP,EOS\r\n")]
-        public string coins {
-            get {
-                return ((string)(this["coins"]));
-            }
-            set {
-                this["coins"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public double maxProfit {
-            get {
-                return ((double)(this["maxProfit"]));
-            }
-            set {
-                this["maxProfit"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0.05")]
         public double fee {
             get {
@@ -73,25 +49,97 @@ namespace UpbitDealer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("50")]
-        public double ratio {
+        [global::System.Configuration.DefaultSettingValueAttribute("XRP")]
+        public string coin {
             get {
-                return ((double)(this["ratio"]));
+                return ((string)(this["coin"]));
             }
             set {
-                this["ratio"] = value;
+                this["coin"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("XRP")]
-        public string coinName {
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int candleType {
             get {
-                return ((string)(this["coinName"]));
+                return ((int)(this["candleType"]));
             }
             set {
-                this["coinName"] = value;
+                this["candleType"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public int tradeRate {
+            get {
+                return ((int)(this["tradeRate"]));
+            }
+            set {
+                this["tradeRate"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int interval {
+            get {
+                return ((int)(this["interval"]));
+            }
+            set {
+                this["interval"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public double rate {
+            get {
+                return ((double)(this["rate"]));
+            }
+            set {
+                this["rate"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        public int candleCount {
+            get {
+                return ((int)(this["candleCount"]));
+            }
+            set {
+                this["candleCount"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public double profit {
+            get {
+                return ((double)(this["profit"]));
+            }
+            set {
+                this["profit"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5000")]
+        public double minTradeKRW {
+            get {
+                return ((double)(this["minTradeKRW"]));
+            }
+            set {
+                this["minTradeKRW"] = value;
             }
         }
     }

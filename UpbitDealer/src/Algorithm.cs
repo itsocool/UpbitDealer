@@ -9,7 +9,7 @@ namespace UpbitDealer.src
     [Serializable]
     public class Algorithm
     {
-        public uint Key { get; set; } = 0;
-        public string Value { get; set; }
+        public int Id { get; set; } = 0;
+        public string Name { get; set; }
     }
 }

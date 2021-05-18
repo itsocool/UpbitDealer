@@ -1,0 +1,25 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="UpbitDealer.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="algorithm" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="coins" Type="System.String" Scope="User">
+      <Value Profile="(Default)">BTC,ETH,ETC,DOGE,XRP,EOS
+</Value>
+    </Setting>
+    <Setting Name="maxProfit" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="fee" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0.05</Value>
+    </Setting>
+    <Setting Name="ratio" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">50</Value>
+    </Setting>
+    <Setting Name="coinName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">XRP</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

@@ -5,21 +5,32 @@
     <Setting Name="algorithm" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
-    <Setting Name="coins" Type="System.String" Scope="User">
-      <Value Profile="(Default)">BTC,ETH,ETC,DOGE,XRP,EOS
-</Value>
-    </Setting>
-    <Setting Name="maxProfit" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
     <Setting Name="fee" Type="System.Double" Scope="User">
       <Value Profile="(Default)">0.05</Value>
     </Setting>
-    <Setting Name="ratio" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">50</Value>
-    </Setting>
-    <Setting Name="coinName" Type="System.String" Scope="User">
+    <Setting Name="coin" Type="System.String" Scope="User">
       <Value Profile="(Default)">XRP</Value>
+    </Setting>
+    <Setting Name="candleType" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="tradeRate" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
+    <Setting Name="interval" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="rate" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="candleCount" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">3</Value>
+    </Setting>
+    <Setting Name="profit" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="minTradeKRW" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">5000</Value>
     </Setting>
   </Settings>
 </SettingsFile>

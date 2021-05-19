@@ -188,6 +188,8 @@
     <None Include="packages.config" />
     <None Include="Properties\DataSources\UpbitDealer.form.Bot.datasource" />
     <None Include="Properties\DataSources\UpbitDealer.src.Algorithm.datasource" />
+    <None Include="Properties\DataSources\UpbitDealer.src.CandleType.datasource" />
+    <None Include="Properties\DataSources\UpbitDealer.src.Coin.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

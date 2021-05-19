@@ -45,8 +45,7 @@ namespace UpbitDealer.form
             this.lblmin = new System.Windows.Forms.TextBox();
             this.txtTradeRate = new System.Windows.Forms.TextBox();
             this.textBox14 = new System.Windows.Forms.TextBox();
-            this.botCandleTypeBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.botAlgorithmBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.cmbAlgorithm = new System.Windows.Forms.ComboBox();
             this.textBox16 = new System.Windows.Forms.TextBox();
             this.txtFee = new System.Windows.Forms.TextBox();
             this.textBox23 = new System.Windows.Forms.TextBox();
@@ -70,16 +69,11 @@ namespace UpbitDealer.form
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.rtxtCurrent = new System.Windows.Forms.RichTextBox();
             this.botBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.cmbAlgorithm = new System.Windows.Forms.ComboBox();
-            this.botCoinBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.groupBox6.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.botCandleTypeBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.botAlgorithmBindingSource)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.botBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.botCoinBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // button2
@@ -123,9 +117,6 @@ namespace UpbitDealer.form
             // cmbCandle
             // 
             this.cmbCandle.BackColor = System.Drawing.Color.LightGray;
-            this.cmbCandle.DataBindings.Add(new System.Windows.Forms.Binding("SelectedValue", this.botBindingSource, "CandleType", true));
-            this.cmbCandle.DataSource = this.botCandleTypeBindingSource;
-            this.cmbCandle.DisplayMember = "Name";
             this.cmbCandle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbCandle.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Bold);
             this.cmbCandle.FormattingEnabled = true;
@@ -133,7 +124,6 @@ namespace UpbitDealer.form
             this.cmbCandle.Name = "cmbCandle";
             this.cmbCandle.Size = new System.Drawing.Size(256, 38);
             this.cmbCandle.TabIndex = 55;
-            this.cmbCandle.ValueMember = "Minute";
             // 
             // txtCandleCount
             // 
@@ -167,9 +157,6 @@ namespace UpbitDealer.form
             // cmbCoin
             // 
             this.cmbCoin.BackColor = System.Drawing.Color.LightGray;
-            this.cmbCoin.DataBindings.Add(new System.Windows.Forms.Binding("SelectedValue", this.botBindingSource, "Coin", true));
-            this.cmbCoin.DataSource = this.botCoinBindingSource;
-            this.cmbCoin.DisplayMember = "CoinName";
             this.cmbCoin.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbCoin.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Bold);
             this.cmbCoin.FormattingEnabled = true;
@@ -177,7 +164,6 @@ namespace UpbitDealer.form
             this.cmbCoin.Name = "cmbCoin";
             this.cmbCoin.Size = new System.Drawing.Size(256, 38);
             this.cmbCoin.TabIndex = 52;
-            this.cmbCoin.ValueMember = "Ticker";
             // 
             // textBox3
             // 
@@ -296,15 +282,17 @@ namespace UpbitDealer.form
             this.textBox14.Text = "거래 비율 (%)";
             this.textBox14.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // botCandleTypeBindingSource
+            // cmbAlgorithm
             // 
-            this.botCandleTypeBindingSource.DataMember = "CandleTypeList";
-            this.botCandleTypeBindingSource.DataSource = typeof(UpbitDealer.form.Bot);
-            // 
-            // botAlgorithmBindingSource
-            // 
-            this.botAlgorithmBindingSource.DataMember = "AlgorithmList";
-            this.botAlgorithmBindingSource.DataSource = typeof(UpbitDealer.form.Bot);
+            this.cmbAlgorithm.BackColor = System.Drawing.Color.LightGray;
+            this.cmbAlgorithm.DataSource = this.botBindingSource;
+            this.cmbAlgorithm.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbAlgorithm.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Bold);
+            this.cmbAlgorithm.FormattingEnabled = true;
+            this.cmbAlgorithm.Location = new System.Drawing.Point(140, 21);
+            this.cmbAlgorithm.Name = "cmbAlgorithm";
+            this.cmbAlgorithm.Size = new System.Drawing.Size(256, 38);
+            this.cmbAlgorithm.TabIndex = 1;
             // 
             // textBox16
             // 
@@ -645,26 +633,6 @@ namespace UpbitDealer.form
             // 
             this.botBindingSource.DataSource = typeof(UpbitDealer.form.Bot);
             // 
-            // cmbAlgorithm
-            // 
-            this.cmbAlgorithm.BackColor = System.Drawing.Color.LightGray;
-            this.cmbAlgorithm.DataBindings.Add(new System.Windows.Forms.Binding("SelectedValue", this.botBindingSource, "Algorithm", true));
-            this.cmbAlgorithm.DataSource = this.botAlgorithmBindingSource;
-            this.cmbAlgorithm.DisplayMember = "Name";
-            this.cmbAlgorithm.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbAlgorithm.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Bold);
-            this.cmbAlgorithm.FormattingEnabled = true;
-            this.cmbAlgorithm.Location = new System.Drawing.Point(140, 21);
-            this.cmbAlgorithm.Name = "cmbAlgorithm";
-            this.cmbAlgorithm.Size = new System.Drawing.Size(256, 38);
-            this.cmbAlgorithm.TabIndex = 1;
-            this.cmbAlgorithm.ValueMember = "Id";
-            // 
-            // botCoinBindingSource
-            // 
-            this.botCoinBindingSource.DataMember = "CoinList";
-            this.botCoinBindingSource.DataSource = typeof(UpbitDealer.form.Bot);
-            // 
             // Bot
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
@@ -685,21 +653,19 @@ namespace UpbitDealer.form
             this.Load += new System.EventHandler(this.Bot_Load);
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.botCandleTypeBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.botAlgorithmBindingSource)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.botBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.botCoinBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
         private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.ComboBox cmbAlgorithm;
         private System.Windows.Forms.TextBox textBox16;
         private System.Windows.Forms.TextBox txtFee;
         private System.Windows.Forms.TextBox textBox23;
@@ -735,10 +701,6 @@ namespace UpbitDealer.form
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.RichTextBox rtxtCurrent;
-        private System.Windows.Forms.BindingSource botAlgorithmBindingSource;
-        private System.Windows.Forms.BindingSource botCandleTypeBindingSource;
         private System.Windows.Forms.BindingSource botBindingSource;
-        private System.Windows.Forms.BindingSource botCoinBindingSource;
-        private System.Windows.Forms.ComboBox cmbAlgorithm;
     }
 }

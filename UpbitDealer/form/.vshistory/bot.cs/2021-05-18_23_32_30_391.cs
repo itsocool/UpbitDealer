@@ -10,7 +10,6 @@ using System.Linq;
 using Newtonsoft.Json.Linq;
 using System.Diagnostics;
 using System.Activities.Statements;
-using System.Threading.Tasks;
 
 namespace UpbitDealer.form
 {
@@ -19,25 +18,20 @@ namespace UpbitDealer.form
         public React React { get; set; }
         public ApiData ApiData { get; set; }
         public Timer Timer { get; set; }
-        public List<Algorithm> AlgorithmList { get; set; } = BotSetting.AlgorithmList;
-        public List<CandleType> CandleTypeList { get; set; } = BotSetting.CandleTypeList;
-        public List<Coin> CoinList { get; set; } = BotSetting.CoinList;
-        public Algorithm Algorithm { get; set; } = BotSetting.AlgorithmList.Where(x => x.Id == Settings.Default.algorithm).FirstOrDefault();
-        public CandleType CandleType { get; set; } = BotSetting.CandleTypeList.Where(x => x.Minute == Settings.Default.candleType).FirstOrDefault();
+        public Algorithm Algorithm { get; set; }
+        public CandleType CandleType { get; set; }
         public double FeeRate { get; set; }
         public int TradeRate { get; set; }
-        public Coin Coin { get; set; } = BotSetting.CoinList.Where(x => x.Ticker.Equals(Settings.Default.coin)).FirstOrDefault();
+        public Coin Coin { get; set; }
         public int Interval { get; set; }
         public int CandleCount { get; set; }
         public double TriggerRate { get; set; }
-        public DateTime LastBuyDate { get; set; } = DateTime.Now;
-        public DateTime LastSellDate { get; set; } = DateTime.Now;
+        public DateTime LastBuyDate { get; set; } = DateTime.MinValue;
+        public DateTime LastSellDate { get; set; } = DateTime.MinValue;
         public double StartKRW { get; set; } = 0;
 
         public Bot()
         {
-            AlgorithmList = BotSetting.AlgorithmList;
-
             InitializeComponent();
             PostInit();
         }
@@ -49,20 +43,20 @@ namespace UpbitDealer.form
             ApiData = new ApiData(accessKey, secretEky);
             React = new React(accessKey, secretEky);
 
-            //cmbAlgorithm.DataSource = new BindingSource(BotSetting.AlgorithmList, null);
-            //cmbAlgorithm.ValueMember = "Id";
-            //cmbAlgorithm.DisplayMember = "Name";
-            //cmbAlgorithm.SelectedValue = Settings.Default.algorithm;
+            cmbAlgorithm.DataSource = new BindingSource(BotSetting.AlgorithmList, null);
+            cmbAlgorithm.ValueMember = "Id";
+            cmbAlgorithm.DisplayMember = "Name";
+            cmbAlgorithm.SelectedValue = Settings.Default.algorithm;
 
-            //cmbCandle.DataSource = new BindingSource(BotSetting.CandleTypeList, null);
-            //cmbCandle.ValueMember = "Minute";
-            //cmbCandle.DisplayMember = "Name";
-            //cmbCandle.SelectedValue = Settings.Default.candleType;
+            cmbCandle.DataSource = new BindingSource(BotSetting.CandleTypes, null);
+            cmbCandle.ValueMember = "Minute";
+            cmbCandle.DisplayMember = "Name";
+            cmbCandle.SelectedValue = Settings.Default.candleType;
 
-            //cmbCoin.DataSource = new BindingSource(BotSetting.CoinList, null);
-            //cmbCoin.ValueMember = "Ticker";
-            //cmbCoin.DisplayMember = "CoinName";
-            //cmbCoin.SelectedValue = Settings.Default.coin;
+            cmbCoin.DataSource = new BindingSource(BotSetting.CoinList, null);
+            cmbCoin.ValueMember = "Ticker";
+            cmbCoin.DisplayMember = "CoinName";
+            cmbCoin.SelectedValue = Settings.Default.coin;
         }
 
         private void Bot_Load(object sender, EventArgs e)
@@ -251,44 +245,41 @@ namespace UpbitDealer.form
 
             // 해당 코인 보유금액이 있으면 매도 없으면 매수
             var candles = ApiData.getCandle<List<Candle>>(coinName, candleType, candleCount);   // 캔들 조회
-            //var currCandle = candles.First();                                                 // 현재 캔들
-            //var currPrice = currCandle.Close;                                                 // 현재가
-            var ticker = ApiData.getTicker(coinName).FirstOrDefault();
-            var currPrice = (ticker != null) ? ticker.Value<double>("trade_price") : 0D;        // 현재가
+            var currCandle = candles.First();                                                   // 현재 캔들
+            var currPrice = currCandle.Close;                                                   // 현재가
 
-            //var orderChance = GetOrderChance(ApiData, coinName, currPrice);                   // 주문 가능 정보
-            var orderChance = GetBalance(ApiData, coinName, currPrice, StartKRW);
+            System.Threading.Thread.Sleep(1000);
+
+            var orderChance = GetOrderChance(ApiData, coinName, currPrice);                     // 주문 가능 정보
+            var coinPrice = orderChance.CoinBalance;                                            // 코인 보유금
             var krwBalance = orderChance.KRWBalance;                                            // 보유 현금
-            var coinBalance = orderChance.CoinBalance;                                          // 코인 보유금
             var coinVol = orderChance.CoinVol;                                                  // 보유 코인 수량
             var avgPrice = orderChance.AvgBuyPrice;                                             // 매수 평단가
-            var coinBuyBalance = avgPrice * coinVol;                                              // 코인 매수금
             var minTradeKRW = Settings.Default.minTradeKRW;                                     // 최소 거래 금액
 
             // 분봉 N개를 기준으로 직전 시가 에서 현재 금액 등낙률을 가져온다.
-            var prevCandle = candles[1];                                                        // 직전 캔들
-            var lastCandle = candles.Last();                                                    // 마지막 캔들
-            var prevPrice = prevCandle.Low;                                                     // 직전저가
-            var highPrice = candles.GetRange(1, candles.Count - 1).Max(x => x.High);            // 최고가
-            var changePrice = (currPrice - prevPrice);                                          // 변동가
-            var changeRate = (changePrice / currPrice) * 100;                                   // 변동율
-            var candlesChange = (currPrice - highPrice);                                        // 캔들 변동가
-            var candlesRate = (candlesChange / highPrice) * 100;                                // 캔들 변동율
-            var profit = coinBalance - coinBuyBalance;                                          // 수익
-            //var tradeProfitRate = (avgPrice == 0) ? 0D : (profit / avgPrice) * 100;           // 수익율
-            var targetProfit = coinBuyBalance + (coinBuyBalance * ((triggerRate / candleCount) + (feeRate * 2)) / 100);
-            //var targetPrice = avgPrice + targetProfit;
-            //var target = coinBuyPrice
-
+            var prevCandle = candles[1];                                                    // 직전 캔들
+            var lastCandle = candles.Last();                                                // 마지막 캔들
+            var prevPrice = prevCandle.Close;                                               // 직전종가
+            prevPrice = prevCandle.Low;     // 직전 저가 대입
+            var startPrice = lastCandle.Open;                                               // 마지막 캔들 시작가
+            var highPrice = candles.GetRange(1, candles.Count - 1).Max(x => x.High);        // 최고가
+            startPrice = Math.Max(startPrice, highPrice);   // 캔들 최고가 대입
+            var change = (currPrice - prevPrice);                                           // 변동가
+            var currentRate = (change / currPrice) * 100;                                   // 등락율
+            var candlesChange = (currPrice - startPrice);                                   // 캔들 변동가
+            var candlesRate = (candlesChange / startPrice) * 100;                           // 캔들 등락율
+            var profit = (avgPrice == 0) ? 0D : (currPrice - avgPrice);                     // 수익
+            var tradeProfitRate = (avgPrice == 0) ? 0D : (profit / avgPrice) * 100;                                // 수익율
             var result = null as JObject;
-            var args = new object[] { coinName, currPrice, prevPrice, highPrice, changeRate, candlesRate, avgPrice, targetProfit };
+            var args = new object[] { coinName, currPrice, prevPrice, startPrice, currentRate, candlesRate, avgPrice, tradeProfitRate };
             var buyTs = DateTime.Now - LastBuyDate;
             var sellTs = DateTime.Now - LastSellDate;
             var minutes = sellTs.TotalMinutes;
 
-            WriteCurrent("{0} : 현재가 {1:N0}, 직전가 {2:N0}, 시작가 {3:N0}, 직전등락폭 {4:F6}, 등락폭 {5:F6}, 평단가 {6:N0}, 목표가 {7:N0}", args);
+            WriteLog("{0} : 현재가 {1:N0}, 직전가 {2:N0}, 시작가 {3:N0}, 직전등락폭 {4:F6}, 등락폭 {5:F6}, 평단가 {6:N0}, 수익율 {7:F6}", args);
 
-            if(StartKRW < minTradeKRW && krwBalance > minTradeKRW && coinBalance < minTradeKRW)
+            if(StartKRW < minTradeKRW && krwBalance > minTradeKRW && coinPrice < minTradeKRW)
             {
                 // 거래 시작 금액
                 StartKRW = krwBalance;
@@ -296,37 +287,53 @@ namespace UpbitDealer.form
 
             try
             {
-                if (coinBalance <= minTradeKRW && krwBalance <= minTradeKRW)
+                if (coinPrice <= minTradeKRW && krwBalance <= minTradeKRW)
                 {
                     // 보유현금과 보유 코인이 최소 거래금액 보다 적으면 거래 없음
-                    WriteLog("#### 거래 불가 : 보유현금 {0}, 코인보유금 {1}, 최소 거래 금액 {2},", krwBalance, coinBalance, minTradeKRW);
+                    WriteLog("#### 거래 불가 : 보유현금 {0}, 코인보유금 {1}, 최소 거래 금액 {2},", krwBalance, coinPrice, minTradeKRW);
                 }
                 else if (krwBalance > minTradeKRW
-                    && sellTs.TotalSeconds >= CandleType.Minute * 60 / 2
+                    && sellTs.TotalMinutes >= CandleType.Minute
                     && candlesRate <= -(triggerRate + (feeRate * 2))
-                    && changeRate >= (feeRate * 2))
+                    && currentRate >= (feeRate * 2))
                 {
                     // BUY
                     // 보유현금이 최소 거래금액 보다 많음
                     // 수익율 초과하여 떨어지다 수수료율 2배 이상 상승 했을때 거래비율 만큼 산다.
                     var total = ToOrderPrice(krwBalance);
                     result = React.executeDeal(true, false, coinName, 0, 0, total);
+
+                    System.Threading.Thread.Sleep(1000);
+
                     LastBuyDate = DateTime.Now;
                     WriteLog("#### {0} BUY : 금액 {1:N0}, 수량 {2:F6}", coinName, total, total / currPrice);
                 }
-                else if (coinBalance > minTradeKRW
-                    && (buyTs.TotalSeconds >= CandleType.Minute * 60 * candleCount / 2
-                    || targetProfit <= coinBalance ))
+                else if (coinPrice > minTradeKRW
+                    && (buyTs.TotalSeconds >= CandleType.Minute * 45 && tradeProfitRate <= (feeRate - triggerRate)
+                        || tradeProfitRate >= triggerRate + (feeRate * 2)))
                 {
                     // SELL
                     // 코인평가금 최소 거래금액 보다 많음
-                    // 분봉 하나의 시간이 지나면 시장가에 전체 매도
-                    // 현재가가 평단가 보다 (수익율/캔들수 + 수료율2배) 이상일때 전체 매도
+                    // 현재가가 평단가 보다 (수익율 - 수료율 * 2) 이하일때 전체 매도
+                    // 현재가가 평단가 보다 (수익율 + 수료율 * 2) 이상일때 전체 매도
                     var vol = coinVol;
                     vol = Math.Truncate(vol * 100000) / 100000;
                     result = React.executeDeal(false, false, coinName, vol, 0, 0);
                     LastSellDate = DateTime.Now;
+
+                    System.Threading.Thread.Sleep(1000);
+
                     WriteLog("#### {0} SELL : 금액 {1:N0}, 수량 {2:F6}", coinName, vol * currPrice, vol);
+
+                    var chance = GetOrderChance(ApiData, coinName, currPrice);
+                    var totalKrw = chance.KRWBalance + chance.CoinBalance;
+                    var krwProfit = totalKrw - StartKRW;
+                    var krwProfitRate = krwProfit / StartKRW * 100;
+                    var profits = new object[] { coinName, StartKRW, totalKrw, krwProfit, krwProfitRate };
+
+                    txtProfitPrice.Text = krwProfit.ToString("N0");
+                    txtProfitRate.Text = krwProfitRate.ToString("F6");
+                    WriteLog("#### {0} 수익 : 거래시작금액 {1:N0}, 현재평가 금액 {2:N0}, 수익금액 {3:N0}, 수익율 {4:F6}", profits);
                 }
             }
             catch (Exception ex)
@@ -336,68 +343,9 @@ namespace UpbitDealer.form
 
             if (result != null)
             {
-                var uuid = result.Value<string>("uuid");
-                var coinProfit = GetOrderResult(ApiData, uuid, coinName, currPrice, StartKRW);
-
-                //WriteLog("#### RESULT : {0}", result.ToString());
-
-                //var coinProfit = GetBalance(ApiData, coinName, StartKRW);
-
-                //txtProfitPrice.Text = coinProfit.KrwProfit.ToString("N0");
-                //txtProfitRate.Text = coinProfit.KrwProfitRate.ToString("F6");
-                var profits = new object[] { coinName, StartKRW, coinProfit.TotalBalance, coinProfit.KrwProfit, coinProfit.KrwProfitRate };
-                WriteLog("#### {0} 수익 : 거래시작금액 {1:N0}, 현재평가 금액 {2:N0}, 수익금액 {3:N0}, 수익율 {4:F6}", profits);
-            }
-        }
-
-        private Balance GetOrderResult(ApiData apiData, string uuid, string coinName, double currentPrice, double startKrw)
-        {
-            System.Threading.Thread.Sleep(1500);
-            var startTime = DateTime.Now;
-            var order = apiData.checkOrder(uuid);
-            var state = order.Value<string>("state");
-
-            //while ((DateTime.Now - startTime).TotalSeconds <= 10 && !"donw".Equals(state))
-            //{
-
-            //    order = apiData.checkOrder(uuid);
-            //    state = order.Value<string>("state");
-            //}
-
-            return GetBalance(apiData, coinName, currentPrice, startKrw);
-        }
-
-        private Balance GetBalance(ApiData apiData, string coinName, double currentPrice, double startKrw)
-        {
-            System.Threading.Thread.Sleep(500);
-            var balance = new Balance();
-            var asset = apiData.getAsset();
-            var krwAsset = asset.Where(x => "KRW".Equals(x.Value<string>("currency"))).FirstOrDefault();
-            var coinAsset = asset.Where(x => coinName.Equals(x.Value<string>("currency")) && "KRW".Equals(x.Value<string>("unit_currency"))).FirstOrDefault();
-
-            if (krwAsset != null)
-            {
-                balance.KRWBalance = krwAsset.Value<double>("balance");
+                WriteLog("#### RESULT : {0}", result.ToString());
             }
 
-            if (coinAsset != null)
-            {
-                balance.CoinVol = coinAsset.Value<double>("balance");
-                balance.AvgBuyPrice = coinAsset.Value<double>("avg_buy_price");
-                balance.CoinBalance = balance.CoinVol * currentPrice;
-            }
-
-            balance.TotalBalance = balance.KRWBalance + balance.CoinBalance;
-            balance.KrwProfit = balance.TotalBalance - startKrw;
-            balance.KrwProfitRate = balance.KrwProfit / startKrw * 100;
-
-            {
-                txtKRW.Text = balance.KRWBalance.ToString("N0");
-                txtCoinBalance.Text = balance.CoinBalance.ToString("N0");
-                txtBuyBalance.Text = (balance.AvgBuyPrice * balance.CoinVol).ToString("N0");
-            }
-
-            return balance;
         }
 
         private double ToOrderPrice(double krw)
@@ -420,21 +368,25 @@ namespace UpbitDealer.form
             return orderPrice;
         }
 
-        private void WriteCurrent(string format, params object[] args)
+        private OrderChance GetOrderChance(ApiData apiData, string coinName, double currentPrice, bool setText = true)
         {
-            var log = $"[{DateTime.Now:T}] {string.Format(format, args)}{Environment.NewLine}";
+            var orderChance = apiData.getOrdersChance(coinName);
+            var ask = orderChance["ask_account"];
+            var bid = orderChance["bid_account"];
+            var result = new OrderChance(currentPrice)
+            {
+                KRWBalance = bid.Value<double>("balance"),              // 보유 현금
+                CoinVol = ask.Value<double>("balance"),                 // 보유 코인 수량
+                AvgBuyPrice = ask.Value<double>("avg_buy_price"),       // 매수 평단가
+            };
 
-            if (InvokeRequired)
+            if (setText)
             {
-                BeginInvoke((MethodInvoker)delegate
-                {
-                    rtxtCurrent.Text = log;
-                });
+                txtKRW.Text = result.KRWBalance.ToString("N0");
+                txtCoinBalance.Text = result.CoinBalance.ToString("N0");
             }
-            else
-            {
-                rtxtCurrent.Text = log;
-            }
+
+            return result;
         }
 
         private void WriteLog(string format, params object[] args)

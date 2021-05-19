@@ -54,15 +54,15 @@ namespace UpbitDealer.form
             //cmbAlgorithm.DisplayMember = "Name";
             //cmbAlgorithm.SelectedValue = Settings.Default.algorithm;
 
-            //cmbCandle.DataSource = new BindingSource(BotSetting.CandleTypeList, null);
-            //cmbCandle.ValueMember = "Minute";
-            //cmbCandle.DisplayMember = "Name";
-            //cmbCandle.SelectedValue = Settings.Default.candleType;
+            cmbCandle.DataSource = new BindingSource(BotSetting.CandleTypeList, null);
+            cmbCandle.ValueMember = "Minute";
+            cmbCandle.DisplayMember = "Name";
+            cmbCandle.SelectedValue = Settings.Default.candleType;
 
-            //cmbCoin.DataSource = new BindingSource(BotSetting.CoinList, null);
-            //cmbCoin.ValueMember = "Ticker";
-            //cmbCoin.DisplayMember = "CoinName";
-            //cmbCoin.SelectedValue = Settings.Default.coin;
+            cmbCoin.DataSource = new BindingSource(BotSetting.CoinList, null);
+            cmbCoin.ValueMember = "Ticker";
+            cmbCoin.DisplayMember = "CoinName";
+            cmbCoin.SelectedValue = Settings.Default.coin;
         }
 
         private void Bot_Load(object sender, EventArgs e)

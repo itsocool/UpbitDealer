@@ -29,7 +29,6 @@ namespace UpbitDealer.form
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Bot));
             this.button2 = new System.Windows.Forms.Button();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
@@ -45,8 +44,7 @@ namespace UpbitDealer.form
             this.lblmin = new System.Windows.Forms.TextBox();
             this.txtTradeRate = new System.Windows.Forms.TextBox();
             this.textBox14 = new System.Windows.Forms.TextBox();
-            this.botCandleTypeBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.botAlgorithmBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.cmbAlgorithm = new System.Windows.Forms.ComboBox();
             this.textBox16 = new System.Windows.Forms.TextBox();
             this.txtFee = new System.Windows.Forms.TextBox();
             this.textBox23 = new System.Windows.Forms.TextBox();
@@ -58,28 +56,16 @@ namespace UpbitDealer.form
             this.txtCoin = new System.Windows.Forms.TextBox();
             this.btnApply = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.txtBuyBalance = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.chkAutoScroll = new System.Windows.Forms.CheckBox();
+            this.txtLog = new System.Windows.Forms.TextBox();
             this.txtProfitPrice = new System.Windows.Forms.TextBox();
             this.textBox5 = new System.Windows.Forms.TextBox();
             this.textBox7 = new System.Windows.Forms.TextBox();
             this.txtProfitRate = new System.Windows.Forms.TextBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.chkAutoScroll = new System.Windows.Forms.CheckBox();
-            this.txtLog = new System.Windows.Forms.TextBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.rtxtCurrent = new System.Windows.Forms.RichTextBox();
-            this.botBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.cmbAlgorithm = new System.Windows.Forms.ComboBox();
-            this.botCoinBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.groupBox6.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.botCandleTypeBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.botAlgorithmBindingSource)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            this.groupBox3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.botBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.botCoinBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // button2
@@ -115,7 +101,7 @@ namespace UpbitDealer.form
             this.groupBox6.ForeColor = System.Drawing.Color.White;
             this.groupBox6.Location = new System.Drawing.Point(12, 12);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(402, 346);
+            this.groupBox6.Size = new System.Drawing.Size(402, 404);
             this.groupBox6.TabIndex = 42;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "설정";
@@ -123,9 +109,6 @@ namespace UpbitDealer.form
             // cmbCandle
             // 
             this.cmbCandle.BackColor = System.Drawing.Color.LightGray;
-            this.cmbCandle.DataBindings.Add(new System.Windows.Forms.Binding("SelectedValue", this.botBindingSource, "CandleType", true));
-            this.cmbCandle.DataSource = this.botCandleTypeBindingSource;
-            this.cmbCandle.DisplayMember = "Name";
             this.cmbCandle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbCandle.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Bold);
             this.cmbCandle.FormattingEnabled = true;
@@ -133,7 +116,6 @@ namespace UpbitDealer.form
             this.cmbCandle.Name = "cmbCandle";
             this.cmbCandle.Size = new System.Drawing.Size(256, 38);
             this.cmbCandle.TabIndex = 55;
-            this.cmbCandle.ValueMember = "Minute";
             // 
             // txtCandleCount
             // 
@@ -167,9 +149,6 @@ namespace UpbitDealer.form
             // cmbCoin
             // 
             this.cmbCoin.BackColor = System.Drawing.Color.LightGray;
-            this.cmbCoin.DataBindings.Add(new System.Windows.Forms.Binding("SelectedValue", this.botBindingSource, "Coin", true));
-            this.cmbCoin.DataSource = this.botCoinBindingSource;
-            this.cmbCoin.DisplayMember = "CoinName";
             this.cmbCoin.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbCoin.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Bold);
             this.cmbCoin.FormattingEnabled = true;
@@ -177,7 +156,6 @@ namespace UpbitDealer.form
             this.cmbCoin.Name = "cmbCoin";
             this.cmbCoin.Size = new System.Drawing.Size(256, 38);
             this.cmbCoin.TabIndex = 52;
-            this.cmbCoin.ValueMember = "Ticker";
             // 
             // textBox3
             // 
@@ -296,15 +274,16 @@ namespace UpbitDealer.form
             this.textBox14.Text = "거래 비율 (%)";
             this.textBox14.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // botCandleTypeBindingSource
+            // cmbAlgorithm
             // 
-            this.botCandleTypeBindingSource.DataMember = "CandleTypeList";
-            this.botCandleTypeBindingSource.DataSource = typeof(UpbitDealer.form.Bot);
-            // 
-            // botAlgorithmBindingSource
-            // 
-            this.botAlgorithmBindingSource.DataMember = "AlgorithmList";
-            this.botAlgorithmBindingSource.DataSource = typeof(UpbitDealer.form.Bot);
+            this.cmbAlgorithm.BackColor = System.Drawing.Color.LightGray;
+            this.cmbAlgorithm.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbAlgorithm.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Bold);
+            this.cmbAlgorithm.FormattingEnabled = true;
+            this.cmbAlgorithm.Location = new System.Drawing.Point(140, 21);
+            this.cmbAlgorithm.Name = "cmbAlgorithm";
+            this.cmbAlgorithm.Size = new System.Drawing.Size(256, 38);
+            this.cmbAlgorithm.TabIndex = 1;
             // 
             // textBox16
             // 
@@ -414,7 +393,7 @@ namespace UpbitDealer.form
             this.txtCoinBalance.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.txtCoinBalance.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtCoinBalance.ForeColor = System.Drawing.Color.Black;
-            this.txtCoinBalance.Location = new System.Drawing.Point(142, 109);
+            this.txtCoinBalance.Location = new System.Drawing.Point(142, 107);
             this.txtCoinBalance.Name = "txtCoinBalance";
             this.txtCoinBalance.Size = new System.Drawing.Size(254, 38);
             this.txtCoinBalance.TabIndex = 47;
@@ -428,7 +407,7 @@ namespace UpbitDealer.form
             this.txtCoin.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.txtCoin.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtCoin.ForeColor = System.Drawing.Color.White;
-            this.txtCoin.Location = new System.Drawing.Point(8, 112);
+            this.txtCoin.Location = new System.Drawing.Point(8, 110);
             this.txtCoin.Name = "txtCoin";
             this.txtCoin.ReadOnly = true;
             this.txtCoin.Size = new System.Drawing.Size(128, 28);
@@ -451,8 +430,6 @@ namespace UpbitDealer.form
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.txtBuyBalance);
-            this.groupBox1.Controls.Add(this.textBox2);
             this.groupBox1.Controls.Add(this.txtProfitPrice);
             this.groupBox1.Controls.Add(this.textBox5);
             this.groupBox1.Controls.Add(this.textBox7);
@@ -465,99 +442,12 @@ namespace UpbitDealer.form
             this.groupBox1.Controls.Add(this.txtCoin);
             this.groupBox1.Controls.Add(this.txtKRW);
             this.groupBox1.ForeColor = System.Drawing.Color.White;
-            this.groupBox1.Location = new System.Drawing.Point(12, 364);
+            this.groupBox1.Location = new System.Drawing.Point(12, 422);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(402, 304);
+            this.groupBox1.Size = new System.Drawing.Size(402, 246);
             this.groupBox1.TabIndex = 50;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "실행";
-            // 
-            // txtBuyBalance
-            // 
-            this.txtBuyBalance.BackColor = System.Drawing.Color.LightGray;
-            this.txtBuyBalance.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtBuyBalance.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtBuyBalance.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtBuyBalance.ForeColor = System.Drawing.Color.Black;
-            this.txtBuyBalance.Location = new System.Drawing.Point(141, 156);
-            this.txtBuyBalance.Name = "txtBuyBalance";
-            this.txtBuyBalance.Size = new System.Drawing.Size(254, 38);
-            this.txtBuyBalance.TabIndex = 54;
-            this.txtBuyBalance.Text = "0";
-            this.txtBuyBalance.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // textBox2
-            // 
-            this.textBox2.BackColor = System.Drawing.Color.Black;
-            this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.textBox2.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox2.ForeColor = System.Drawing.Color.White;
-            this.textBox2.Location = new System.Drawing.Point(7, 159);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.ReadOnly = true;
-            this.textBox2.Size = new System.Drawing.Size(128, 28);
-            this.textBox2.TabIndex = 55;
-            this.textBox2.Text = "매입금 (KRW)";
-            this.textBox2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // txtProfitPrice
-            // 
-            this.txtProfitPrice.BackColor = System.Drawing.Color.LightGray;
-            this.txtProfitPrice.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtProfitPrice.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtProfitPrice.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtProfitPrice.ForeColor = System.Drawing.Color.Black;
-            this.txtProfitPrice.Location = new System.Drawing.Point(141, 250);
-            this.txtProfitPrice.Name = "txtProfitPrice";
-            this.txtProfitPrice.Size = new System.Drawing.Size(254, 38);
-            this.txtProfitPrice.TabIndex = 52;
-            this.txtProfitPrice.Text = "0";
-            this.txtProfitPrice.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // textBox5
-            // 
-            this.textBox5.BackColor = System.Drawing.Color.Black;
-            this.textBox5.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox5.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.textBox5.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox5.ForeColor = System.Drawing.Color.White;
-            this.textBox5.Location = new System.Drawing.Point(7, 206);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.ReadOnly = true;
-            this.textBox5.Size = new System.Drawing.Size(128, 28);
-            this.textBox5.TabIndex = 51;
-            this.textBox5.Text = "수익율 (%)";
-            this.textBox5.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // textBox7
-            // 
-            this.textBox7.BackColor = System.Drawing.Color.Black;
-            this.textBox7.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox7.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.textBox7.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox7.ForeColor = System.Drawing.Color.White;
-            this.textBox7.Location = new System.Drawing.Point(7, 253);
-            this.textBox7.Name = "textBox7";
-            this.textBox7.ReadOnly = true;
-            this.textBox7.Size = new System.Drawing.Size(128, 28);
-            this.textBox7.TabIndex = 53;
-            this.textBox7.Text = "수익금";
-            this.textBox7.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // txtProfitRate
-            // 
-            this.txtProfitRate.BackColor = System.Drawing.Color.LightGray;
-            this.txtProfitRate.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtProfitRate.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtProfitRate.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtProfitRate.ForeColor = System.Drawing.Color.Black;
-            this.txtProfitRate.Location = new System.Drawing.Point(141, 203);
-            this.txtProfitRate.Name = "txtProfitRate";
-            this.txtProfitRate.Size = new System.Drawing.Size(254, 38);
-            this.txtProfitRate.TabIndex = 50;
-            this.txtProfitRate.Text = "0";
-            this.txtProfitRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // groupBox2
             // 
@@ -570,11 +460,11 @@ namespace UpbitDealer.form
             this.groupBox2.Controls.Add(this.txtLog);
             this.groupBox2.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox2.ForeColor = System.Drawing.Color.White;
-            this.groupBox2.Location = new System.Drawing.Point(420, 79);
+            this.groupBox2.Location = new System.Drawing.Point(420, 13);
             this.groupBox2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.groupBox2.Size = new System.Drawing.Size(930, 589);
+            this.groupBox2.Size = new System.Drawing.Size(930, 655);
             this.groupBox2.TabIndex = 51;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Log";
@@ -607,63 +497,66 @@ namespace UpbitDealer.form
             this.txtLog.Name = "txtLog";
             this.txtLog.ReadOnly = true;
             this.txtLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtLog.Size = new System.Drawing.Size(915, 553);
+            this.txtLog.Size = new System.Drawing.Size(915, 619);
             this.txtLog.TabIndex = 2;
             // 
-            // groupBox3
+            // txtProfitPrice
             // 
-            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox3.BackColor = System.Drawing.Color.Black;
-            this.groupBox3.Controls.Add(this.rtxtCurrent);
-            this.groupBox3.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox3.ForeColor = System.Drawing.Color.White;
-            this.groupBox3.Location = new System.Drawing.Point(420, 13);
-            this.groupBox3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.groupBox3.Size = new System.Drawing.Size(930, 58);
-            this.groupBox3.TabIndex = 52;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Log";
+            this.txtProfitPrice.BackColor = System.Drawing.Color.LightGray;
+            this.txtProfitPrice.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtProfitPrice.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtProfitPrice.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtProfitPrice.ForeColor = System.Drawing.Color.Black;
+            this.txtProfitPrice.Location = new System.Drawing.Point(141, 197);
+            this.txtProfitPrice.Name = "txtProfitPrice";
+            this.txtProfitPrice.Size = new System.Drawing.Size(254, 38);
+            this.txtProfitPrice.TabIndex = 52;
+            this.txtProfitPrice.Text = "0";
+            this.txtProfitPrice.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // rtxtCurrent
+            // textBox5
             // 
-            this.rtxtCurrent.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.rtxtCurrent.BackColor = System.Drawing.Color.Black;
-            this.rtxtCurrent.ForeColor = System.Drawing.Color.White;
-            this.rtxtCurrent.Location = new System.Drawing.Point(7, 25);
-            this.rtxtCurrent.Name = "rtxtCurrent";
-            this.rtxtCurrent.Size = new System.Drawing.Size(915, 26);
-            this.rtxtCurrent.TabIndex = 3;
-            this.rtxtCurrent.Text = "";
+            this.textBox5.BackColor = System.Drawing.Color.Black;
+            this.textBox5.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox5.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.textBox5.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox5.ForeColor = System.Drawing.Color.White;
+            this.textBox5.Location = new System.Drawing.Point(7, 155);
+            this.textBox5.Name = "textBox5";
+            this.textBox5.ReadOnly = true;
+            this.textBox5.Size = new System.Drawing.Size(128, 28);
+            this.textBox5.TabIndex = 51;
+            this.textBox5.Text = "수익율 (%)";
+            this.textBox5.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // botBindingSource
+            // textBox7
             // 
-            this.botBindingSource.DataSource = typeof(UpbitDealer.form.Bot);
+            this.textBox7.BackColor = System.Drawing.Color.Black;
+            this.textBox7.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox7.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.textBox7.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox7.ForeColor = System.Drawing.Color.White;
+            this.textBox7.Location = new System.Drawing.Point(7, 200);
+            this.textBox7.Name = "textBox7";
+            this.textBox7.ReadOnly = true;
+            this.textBox7.Size = new System.Drawing.Size(128, 28);
+            this.textBox7.TabIndex = 53;
+            this.textBox7.Text = "수익금";
+            this.textBox7.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // cmbAlgorithm
+            // txtProfitRate
             // 
-            this.cmbAlgorithm.BackColor = System.Drawing.Color.LightGray;
-            this.cmbAlgorithm.DataBindings.Add(new System.Windows.Forms.Binding("SelectedValue", this.botBindingSource, "Algorithm", true));
-            this.cmbAlgorithm.DataSource = this.botAlgorithmBindingSource;
-            this.cmbAlgorithm.DisplayMember = "Name";
-            this.cmbAlgorithm.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbAlgorithm.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Bold);
-            this.cmbAlgorithm.FormattingEnabled = true;
-            this.cmbAlgorithm.Location = new System.Drawing.Point(140, 21);
-            this.cmbAlgorithm.Name = "cmbAlgorithm";
-            this.cmbAlgorithm.Size = new System.Drawing.Size(256, 38);
-            this.cmbAlgorithm.TabIndex = 1;
-            this.cmbAlgorithm.ValueMember = "Id";
-            // 
-            // botCoinBindingSource
-            // 
-            this.botCoinBindingSource.DataMember = "CoinList";
-            this.botCoinBindingSource.DataSource = typeof(UpbitDealer.form.Bot);
+            this.txtProfitRate.BackColor = System.Drawing.Color.LightGray;
+            this.txtProfitRate.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtProfitRate.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtProfitRate.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtProfitRate.ForeColor = System.Drawing.Color.Black;
+            this.txtProfitRate.Location = new System.Drawing.Point(141, 152);
+            this.txtProfitRate.Name = "txtProfitRate";
+            this.txtProfitRate.Size = new System.Drawing.Size(254, 38);
+            this.txtProfitRate.TabIndex = 50;
+            this.txtProfitRate.Text = "0";
+            this.txtProfitRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // Bot
             // 
@@ -671,7 +564,6 @@ namespace UpbitDealer.form
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(1362, 681);
-            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBox6);
@@ -685,21 +577,17 @@ namespace UpbitDealer.form
             this.Load += new System.EventHandler(this.Bot_Load);
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.botCandleTypeBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.botAlgorithmBindingSource)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.botBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.botCoinBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
         private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.ComboBox cmbAlgorithm;
         private System.Windows.Forms.TextBox textBox16;
         private System.Windows.Forms.TextBox txtFee;
         private System.Windows.Forms.TextBox textBox23;
@@ -731,14 +619,5 @@ namespace UpbitDealer.form
         private System.Windows.Forms.TextBox textBox5;
         private System.Windows.Forms.TextBox textBox7;
         private System.Windows.Forms.TextBox txtProfitRate;
-        private System.Windows.Forms.TextBox txtBuyBalance;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.RichTextBox rtxtCurrent;
-        private System.Windows.Forms.BindingSource botAlgorithmBindingSource;
-        private System.Windows.Forms.BindingSource botCandleTypeBindingSource;
-        private System.Windows.Forms.BindingSource botBindingSource;
-        private System.Windows.Forms.BindingSource botCoinBindingSource;
-        private System.Windows.Forms.ComboBox cmbAlgorithm;
     }
 }

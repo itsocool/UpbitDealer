@@ -19,14 +19,11 @@ namespace UpbitDealer.form
         public React React { get; set; }
         public ApiData ApiData { get; set; }
         public Timer Timer { get; set; }
-        public List<Algorithm> AlgorithmList { get; set; } = BotSetting.AlgorithmList;
-        public List<CandleType> CandleTypeList { get; set; } = BotSetting.CandleTypeList;
-        public List<Coin> CoinList { get; set; } = BotSetting.CoinList;
-        public Algorithm Algorithm { get; set; } = BotSetting.AlgorithmList.Where(x => x.Id == Settings.Default.algorithm).FirstOrDefault();
-        public CandleType CandleType { get; set; } = BotSetting.CandleTypeList.Where(x => x.Minute == Settings.Default.candleType).FirstOrDefault();
+        public Algorithm Algorithm { get; set; }
+        public CandleType CandleType { get; set; }
         public double FeeRate { get; set; }
         public int TradeRate { get; set; }
-        public Coin Coin { get; set; } = BotSetting.CoinList.Where(x => x.Ticker.Equals(Settings.Default.coin)).FirstOrDefault();
+        public Coin Coin { get; set; }
         public int Interval { get; set; }
         public int CandleCount { get; set; }
         public double TriggerRate { get; set; }
@@ -36,8 +33,6 @@ namespace UpbitDealer.form
 
         public Bot()
         {
-            AlgorithmList = BotSetting.AlgorithmList;
-
             InitializeComponent();
             PostInit();
         }
@@ -49,20 +44,20 @@ namespace UpbitDealer.form
             ApiData = new ApiData(accessKey, secretEky);
             React = new React(accessKey, secretEky);
 
-            //cmbAlgorithm.DataSource = new BindingSource(BotSetting.AlgorithmList, null);
-            //cmbAlgorithm.ValueMember = "Id";
-            //cmbAlgorithm.DisplayMember = "Name";
-            //cmbAlgorithm.SelectedValue = Settings.Default.algorithm;
+            cmbAlgorithm.DataSource = new BindingSource(BotSetting.AlgorithmList, null);
+            cmbAlgorithm.ValueMember = "Id";
+            cmbAlgorithm.DisplayMember = "Name";
+            cmbAlgorithm.SelectedValue = Settings.Default.algorithm;
 
-            //cmbCandle.DataSource = new BindingSource(BotSetting.CandleTypeList, null);
-            //cmbCandle.ValueMember = "Minute";
-            //cmbCandle.DisplayMember = "Name";
-            //cmbCandle.SelectedValue = Settings.Default.candleType;
+            cmbCandle.DataSource = new BindingSource(BotSetting.CandleTypes, null);
+            cmbCandle.ValueMember = "Minute";
+            cmbCandle.DisplayMember = "Name";
+            cmbCandle.SelectedValue = Settings.Default.candleType;
 
-            //cmbCoin.DataSource = new BindingSource(BotSetting.CoinList, null);
-            //cmbCoin.ValueMember = "Ticker";
-            //cmbCoin.DisplayMember = "CoinName";
-            //cmbCoin.SelectedValue = Settings.Default.coin;
+            cmbCoin.DataSource = new BindingSource(BotSetting.CoinList, null);
+            cmbCoin.ValueMember = "Ticker";
+            cmbCoin.DisplayMember = "CoinName";
+            cmbCoin.SelectedValue = Settings.Default.coin;
         }
 
         private void Bot_Load(object sender, EventArgs e)
@@ -276,7 +271,7 @@ namespace UpbitDealer.form
             var candlesRate = (candlesChange / highPrice) * 100;                                // 캔들 변동율
             var profit = coinBalance - coinBuyBalance;                                          // 수익
             //var tradeProfitRate = (avgPrice == 0) ? 0D : (profit / avgPrice) * 100;           // 수익율
-            var targetProfit = coinBuyBalance + (coinBuyBalance * ((triggerRate / candleCount) + (feeRate * 2)) / 100);
+            var targetProfit = coinBuyBalance + (coinBuyBalance * ((triggerRate / 2) + (feeRate * 2)) / 100);
             //var targetPrice = avgPrice + targetProfit;
             //var target = coinBuyPrice
 
@@ -286,7 +281,7 @@ namespace UpbitDealer.form
             var sellTs = DateTime.Now - LastSellDate;
             var minutes = sellTs.TotalMinutes;
 
-            WriteCurrent("{0} : 현재가 {1:N0}, 직전가 {2:N0}, 시작가 {3:N0}, 직전등락폭 {4:F6}, 등락폭 {5:F6}, 평단가 {6:N0}, 목표가 {7:N0}", args);
+            WriteLog("{0} : 현재가 {1:N0}, 직전가 {2:N0}, 시작가 {3:N0}, 직전등락폭 {4:F6}, 등락폭 {5:F6}, 평단가 {6:N0}, 목표가 {7:N0}", args);
 
             if(StartKRW < minTradeKRW && krwBalance > minTradeKRW && coinBalance < minTradeKRW)
             {
@@ -359,7 +354,7 @@ namespace UpbitDealer.form
 
             //while ((DateTime.Now - startTime).TotalSeconds <= 10 && !"donw".Equals(state))
             //{
-
+                
             //    order = apiData.checkOrder(uuid);
             //    state = order.Value<string>("state");
             //}
@@ -394,7 +389,6 @@ namespace UpbitDealer.form
             {
                 txtKRW.Text = balance.KRWBalance.ToString("N0");
                 txtCoinBalance.Text = balance.CoinBalance.ToString("N0");
-                txtBuyBalance.Text = (balance.AvgBuyPrice * balance.CoinVol).ToString("N0");
             }
 
             return balance;
@@ -418,23 +412,6 @@ namespace UpbitDealer.form
             }
 
             return orderPrice;
-        }
-
-        private void WriteCurrent(string format, params object[] args)
-        {
-            var log = $"[{DateTime.Now:T}] {string.Format(format, args)}{Environment.NewLine}";
-
-            if (InvokeRequired)
-            {
-                BeginInvoke((MethodInvoker)delegate
-                {
-                    rtxtCurrent.Text = log;
-                });
-            }
-            else
-            {
-                rtxtCurrent.Text = log;
-            }
         }
 
         private void WriteLog(string format, params object[] args)

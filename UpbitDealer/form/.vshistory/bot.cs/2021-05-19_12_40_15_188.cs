@@ -19,14 +19,12 @@ namespace UpbitDealer.form
         public React React { get; set; }
         public ApiData ApiData { get; set; }
         public Timer Timer { get; set; }
-        public List<Algorithm> AlgorithmList { get; set; } = BotSetting.AlgorithmList;
-        public List<CandleType> CandleTypeList { get; set; } = BotSetting.CandleTypeList;
-        public List<Coin> CoinList { get; set; } = BotSetting.CoinList;
-        public Algorithm Algorithm { get; set; } = BotSetting.AlgorithmList.Where(x => x.Id == Settings.Default.algorithm).FirstOrDefault();
-        public CandleType CandleType { get; set; } = BotSetting.CandleTypeList.Where(x => x.Minute == Settings.Default.candleType).FirstOrDefault();
+        public List<Algorithm> AlgorithmList { get; set; }
+        public Algorithm Algorithm { get; set; }
+        public CandleType CandleType { get; set; }
         public double FeeRate { get; set; }
         public int TradeRate { get; set; }
-        public Coin Coin { get; set; } = BotSetting.CoinList.Where(x => x.Ticker.Equals(Settings.Default.coin)).FirstOrDefault();
+        public Coin Coin { get; set; }
         public int Interval { get; set; }
         public int CandleCount { get; set; }
         public double TriggerRate { get; set; }
@@ -36,8 +34,6 @@ namespace UpbitDealer.form
 
         public Bot()
         {
-            AlgorithmList = BotSetting.AlgorithmList;
-
             InitializeComponent();
             PostInit();
         }
@@ -49,20 +45,20 @@ namespace UpbitDealer.form
             ApiData = new ApiData(accessKey, secretEky);
             React = new React(accessKey, secretEky);
 
-            //cmbAlgorithm.DataSource = new BindingSource(BotSetting.AlgorithmList, null);
-            //cmbAlgorithm.ValueMember = "Id";
-            //cmbAlgorithm.DisplayMember = "Name";
-            //cmbAlgorithm.SelectedValue = Settings.Default.algorithm;
+            cmbAlgorithm.DataSource = new BindingSource(BotSetting.AlgorithmList, null);
+            cmbAlgorithm.ValueMember = "Id";
+            cmbAlgorithm.DisplayMember = "Name";
+            cmbAlgorithm.SelectedValue = Settings.Default.algorithm;
 
-            //cmbCandle.DataSource = new BindingSource(BotSetting.CandleTypeList, null);
-            //cmbCandle.ValueMember = "Minute";
-            //cmbCandle.DisplayMember = "Name";
-            //cmbCandle.SelectedValue = Settings.Default.candleType;
+            cmbCandle.DataSource = new BindingSource(BotSetting.CandleTypes, null);
+            cmbCandle.ValueMember = "Minute";
+            cmbCandle.DisplayMember = "Name";
+            cmbCandle.SelectedValue = Settings.Default.candleType;
 
-            //cmbCoin.DataSource = new BindingSource(BotSetting.CoinList, null);
-            //cmbCoin.ValueMember = "Ticker";
-            //cmbCoin.DisplayMember = "CoinName";
-            //cmbCoin.SelectedValue = Settings.Default.coin;
+            cmbCoin.DataSource = new BindingSource(BotSetting.CoinList, null);
+            cmbCoin.ValueMember = "Ticker";
+            cmbCoin.DisplayMember = "CoinName";
+            cmbCoin.SelectedValue = Settings.Default.coin;
         }
 
         private void Bot_Load(object sender, EventArgs e)

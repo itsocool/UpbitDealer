@@ -11,13 +11,11 @@ using Newtonsoft.Json.Linq;
 using System.Diagnostics;
 using System.Activities.Statements;
 using System.Threading.Tasks;
-using log4net;
 
 namespace UpbitDealer.form
 {
     public partial class Bot : Form
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(Bot));
         public React React { get; set; }
         public ApiData ApiData { get; set; }
         public Timer Timer { get; set; }
@@ -235,23 +233,12 @@ namespace UpbitDealer.form
             var tradeRate = TradeRate;
             var triggerRate = TriggerRate;
 
-            // API 호출
-            var candles = ApiData.getCandle<List<Candle>>(coinName, candleType, candleCount * 2);   // 캔들 조회 (2배로 여유롭게)
-            var orderChance = ApiData.getOrdersChance(coinName);                                    // 주문 가능 정보
-
             // 캔들 갯수 많큼 캔들 가져오기
+            var candles = ApiData.getCandle<List<Candle>>(coinName, candleType, candleCount * 2);   // 캔들 조회 (2배로 여유롭게)
             var currPrice = candles.First().Close;                                                  // 현재가
-            var prevPrice = candles[1].Close;                                                       // 직전종가
-            var highPrice = candles.GetRange(1, candleCount - 1).Max(x => x.High);                  // 최고가
-            var downPrice = highPrice * (triggerRate + (feeRate * 2)) / 100;                        // 하락가
-            var triggerDownPrice = highPrice - downPrice;                                           // 매수 하락 촉발가
-            var downRate = Math.Min(0D, (currPrice - highPrice) * 100 / highPrice);                 // 하락율
-            var upPrice = prevPrice * ((triggerRate / candleCount) + (feeRate * 2)) / 100;          // 반등가
-            var triggerUpPrice = prevPrice + upPrice;                                               // 매수 반등 촉발가
-            var upRate = Math.Max(0D, (currPrice - prevPrice) * 100 / prevPrice);                   // 반등 상승율
-            var downUpRate = upRate == 0 ? 0D : (-downRate / upRate);                               // 반등율
 
             // 보유현금 및 주문 정보
+            var orderChance = ApiData.getOrdersChance(coinName);                                    // 주문 가능 정보
             var bid = orderChance["bid_account"];
             var ask = orderChance["ask_account"];
             var krwBalance = bid.Value<double>("balance");                                          // 보유 현금
@@ -263,12 +250,24 @@ namespace UpbitDealer.form
             var totalBalance = krwBalance + coinBalance;                                            // 현재 자산
             var minTradeKRW = Settings.Default.minTradeKRW;                                         // 최소 거래 금액
 
-            //
-            var buyTs = DateTime.Now - LastBuyDate;
-            var sellTs = DateTime.Now - LastSellDate;
-            var sellSec = (CandleType.Minute * 60 * 0.75) - buyTs.TotalSeconds;                     // 매도 까지 남은 시간 (초)
+            // 분봉 N개를 기준으로 직전 시가 에서 현재 금액 등낙률을 가져온다.
+            //var prevCandle = candles[1];                                                          // 직전 캔들
+            //var lastCandle = candles.Last();                                                      // 마지막 캔들
+            var prevPrice = candles[1].Close;                                                       // 직전종가
+            var highPrice = candles.GetRange(1, candleCount - 1).Max(x => x.High);                  // 최고가
+            var downPrice = highPrice * (triggerRate + (feeRate * 2)) / 100;                        // 하락가
+            var triggerDownPrice = highPrice - downPrice;                                           // 매수 하락 촉발가
+            var downRate = Math.Min(0D, (currPrice - highPrice) * 100 / highPrice);                 // 하락율
+            var upPrice = prevPrice * ((triggerRate / candleCount) + (feeRate * 2)) / 100;          // 반등가
+            var triggerUpPrice = prevPrice + upPrice;                                               // 매수 반등 촉발가
+            var upRate = Math.Max(0D, (currPrice - prevPrice) * 100 / prevPrice);                   // 반등 상승율
+            var downUpRate = upRate == 0 ? 0D : (-downRate / upRate);                               // 반등율
             var targetRate = ((triggerRate / (candleCount - 1)) + (feeRate * 2)) / 100;             // 목표 수익율
             var targetSellPrice = avgPrice + (avgPrice * targetRate);                               // 매도 목표가
+
+            var buyTs = DateTime.Now - LastBuyDate;
+            var sellTs = DateTime.Now - LastSellDate;
+            var sellSec = (CandleType.Minute * 60 * candleCount / 3 * 2) - buyTs.TotalSeconds;
             var result = null as JObject;
             var args = new object[] {
                 DateTime.Now,
@@ -288,7 +287,7 @@ namespace UpbitDealer.form
             };
 
             string format = "[{0:T}] {1} : 현재가 {2:N0}, 직전가 {3:N0}, 최고가 {4:N0}, 하락율 {5:F6}, 반등율 {6:F6}, 평단가 {7:N0}";
-            format += (coinBalance >= minTradeKRW) ? ", 매도 까지 남은 시간(초) {13:N0}" : "";
+            format += (coinBalance >= minTradeKRW) ? ", 매도 까지 남은 시간(초) {12:N0}" : "";
             format += "\r\n[{0:T}] {1} : 시작자산 {8:N0}, 현재자산 {9:N0} 매수 하락 촉발가 {10:N0}, 매수 반등 촉발가 {11:N0}, 매도 목표가 {12:N0}";
             WriteCurrent(format, args);
 
@@ -487,26 +486,24 @@ namespace UpbitDealer.form
 
         private void WriteCurrent(string format, params object[] args)
         {
-            var logText = $"{string.Format(format, args)}{Environment.NewLine}";
-            log.Debug(logText);
+            var log = $"{string.Format(format, args)}{Environment.NewLine}";
 
             if (InvokeRequired)
             {
                 BeginInvoke((MethodInvoker)delegate
                 {
-                    rtxtCurrent.Text = logText;
+                    rtxtCurrent.Text = log;
                 });
             }
             else
             {
-                rtxtCurrent.Text = logText;
+                rtxtCurrent.Text = log;
             }
         }
 
         private void WriteLog(string format, params object[] args)
         {
-            var logText = $"[{DateTime.Now:T}] {string.Format(format, args)}{Environment.NewLine}";
-            log.Info(logText);
+            var log = $"[{DateTime.Now:T}] {string.Format(format, args)}{Environment.NewLine}";
 
             if (InvokeRequired)
             {
@@ -519,12 +516,12 @@ namespace UpbitDealer.form
 
                     if (chkAutoScroll.Checked)
                     {
-                        txtLog.AppendText(logText);
+                        txtLog.AppendText(log);
                         //txtLog.ScrollToCaret();
                     }
                     else
                     {
-                        txtLog.Text += logText;
+                        txtLog.Text += log;
                     }
                 });
             }
@@ -537,12 +534,12 @@ namespace UpbitDealer.form
 
                 if (chkAutoScroll.Checked)
                 {
-                    txtLog.AppendText(logText);
+                    txtLog.AppendText(log);
                     txtLog.ScrollToCaret();
                 }
                 else
                 {
-                    txtLog.Text += logText;
+                    txtLog.Text += log;
                 }
             }
         }
@@ -552,7 +549,12 @@ namespace UpbitDealer.form
             if(Timer != null && Timer.Enabled)
             {
                 StartKRW = 0;
+
                 Timer.Stop();
+                btnStart.Enabled = true;
+                btnFinish.Enabled = false;
+
+                Debug.WriteLine("#### STOP TIMER");
                 WriteLog("#### STOP TIMER");
             }
         }

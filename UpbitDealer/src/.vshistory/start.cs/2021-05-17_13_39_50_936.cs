@@ -2,14 +2,11 @@
 using System;
 using System.Windows.Forms;
 using UpbitDealer.src;
-using log4net;
 
 namespace UpbitDealer
 {
     static class Program
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(Program));
-
         public static string Accesskey { get; internal set; }
         public static string Secretkey { get; internal set; }
 
@@ -27,10 +24,6 @@ namespace UpbitDealer
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.ThreadException += (sender, e) =>
-            {
-                log.Error(e.Exception);
-            };
 
             login login = new login();
             Application.Run(login);
@@ -40,6 +33,7 @@ namespace UpbitDealer
                 Secretkey = login.secret_key;
                 Application.Run(new Bot());
             }
+                //Application.Run(new Main(login.access_key, login.secret_key));
         }
     }
 }

@@ -190,9 +190,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Content Include="log4net.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <None Include="packages.config" />
     <None Include="Properties\DataSources\UpbitDealer.form.Bot.datasource" />
     <None Include="Properties\DataSources\UpbitDealer.src.Algorithm.datasource" />

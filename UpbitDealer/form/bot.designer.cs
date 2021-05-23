@@ -86,7 +86,7 @@ namespace UpbitDealer.form
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.button2.BackColor = System.Drawing.Color.Black;
-            this.button2.Location = new System.Drawing.Point(849, 25);
+            this.button2.Location = new System.Drawing.Point(921, 25);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 45;
@@ -381,7 +381,6 @@ namespace UpbitDealer.form
             // btnFinish
             // 
             this.btnFinish.BackColor = System.Drawing.Color.Red;
-            this.btnFinish.Enabled = false;
             this.btnFinish.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnFinish.ForeColor = System.Drawing.Color.Black;
             this.btnFinish.Location = new System.Drawing.Point(137, 21);
@@ -615,11 +614,11 @@ namespace UpbitDealer.form
             this.groupBox2.Controls.Add(this.txtLog);
             this.groupBox2.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox2.ForeColor = System.Drawing.Color.White;
-            this.groupBox2.Location = new System.Drawing.Point(420, 97);
+            this.groupBox2.Location = new System.Drawing.Point(420, 121);
             this.groupBox2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.groupBox2.Size = new System.Drawing.Size(930, 571);
+            this.groupBox2.Size = new System.Drawing.Size(1002, 547);
             this.groupBox2.TabIndex = 51;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Log";
@@ -630,7 +629,7 @@ namespace UpbitDealer.form
             this.chkAutoScroll.AutoSize = true;
             this.chkAutoScroll.Checked = true;
             this.chkAutoScroll.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkAutoScroll.Location = new System.Drawing.Point(762, 29);
+            this.chkAutoScroll.Location = new System.Drawing.Point(834, 29);
             this.chkAutoScroll.Name = "chkAutoScroll";
             this.chkAutoScroll.Size = new System.Drawing.Size(81, 19);
             this.chkAutoScroll.TabIndex = 37;
@@ -652,13 +651,12 @@ namespace UpbitDealer.form
             this.txtLog.Name = "txtLog";
             this.txtLog.ReadOnly = true;
             this.txtLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtLog.Size = new System.Drawing.Size(915, 535);
+            this.txtLog.Size = new System.Drawing.Size(987, 515);
             this.txtLog.TabIndex = 2;
             // 
             // groupBox3
             // 
-            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox3.BackColor = System.Drawing.Color.Black;
             this.groupBox3.Controls.Add(this.rtxtCurrent);
@@ -668,7 +666,7 @@ namespace UpbitDealer.form
             this.groupBox3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.groupBox3.Size = new System.Drawing.Size(930, 84);
+            this.groupBox3.Size = new System.Drawing.Size(1002, 100);
             this.groupBox3.TabIndex = 52;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Log";
@@ -683,7 +681,7 @@ namespace UpbitDealer.form
             this.rtxtCurrent.ForeColor = System.Drawing.Color.White;
             this.rtxtCurrent.Location = new System.Drawing.Point(7, 25);
             this.rtxtCurrent.Name = "rtxtCurrent";
-            this.rtxtCurrent.Size = new System.Drawing.Size(915, 52);
+            this.rtxtCurrent.Size = new System.Drawing.Size(987, 68);
             this.rtxtCurrent.TabIndex = 3;
             this.rtxtCurrent.Text = "";
             // 
@@ -692,7 +690,7 @@ namespace UpbitDealer.form
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(1362, 681);
+            this.ClientSize = new System.Drawing.Size(1434, 681);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);

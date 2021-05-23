@@ -13,7 +13,7 @@ namespace UpbitDealer.src
             new Coin{ Ticker = "ETH", CoinName = "ETH 이더리움" },
             new Coin{ Ticker = "DOGE", CoinName = "DOGE 도지코인" },
             new Coin{ Ticker = "ETC", CoinName = "ETC 이더리움 클래식" },
-            new Coin{ Ticker = "XRP", CoinName = "리플 XRP" },
+            new Coin{ Ticker = "XRP", CoinName = "XRP 리플 " },
             new Coin{ Ticker = "ADA", CoinName = "ADA 에이다" },
             new Coin{ Ticker = "EOS", CoinName = "EOS 이오스" },
         };

@@ -197,18 +197,18 @@ namespace UpbitDealer.src
             request.Method = "POST";
             request.Headers.Add("Authorization:" + authorize_token);
 
-            try
-            {
+            //try
+            //{
                 WebResponse response = request.GetResponse();
                 Stream dataStream = response.GetResponseStream();
                 StreamReader reader = new StreamReader(dataStream);
                 return JObject.Parse(reader.ReadToEnd());
-            }
-            catch(Exception ex)
-            {
-                _ = ex;
-                return null;
-            }
+            //}
+            //catch(Exception ex)
+            //{
+            //    _ = ex;
+            //    return null;
+            //}
         }
         public JObject cancelOrder(string uuid)
         {
